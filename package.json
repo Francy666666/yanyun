@@ -1,1 +1,11 @@
-{"name":"yanyun-site","version":"1.0.0","private":true,"dependencies":{"three":"^0.186.1"}}
+{
+  "name": "yanyun-site",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "node build.js"
+  },
+  "dependencies": {
+    "three": "^0.186.1"
+  }
+}
