@@ -674,3 +674,96 @@ body:has(.tube-wrap.shaking) .tube-hint{color:var(--gold);text-shadow:0 0 16px r
   width:100%;height:100%;display:block;object-fit:contain;
   pointer-events:none;user-select:none;-webkit-user-drag:none;
 }
+
+/* =========================================================
+   月山实景 + 前景石灯
+   ========================================================= */
+.temple{
+  background:#061018 url("../图片/问签-背景.jpg") center center/cover no-repeat;
+}
+.sky,.moon,.mountains{display:none!important}
+.temple::before{
+  content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:
+    radial-gradient(ellipse at 83% 9%,rgba(210,228,235,.16),transparent 20%),
+    linear-gradient(90deg,rgba(3,7,11,.58) 0%,rgba(3,7,11,.14) 30%,transparent 52%,rgba(3,7,11,.26) 100%),
+    linear-gradient(180deg,rgba(2,5,8,.48) 0%,transparent 34%,rgba(2,5,8,.22) 68%,rgba(2,4,6,.82) 100%);
+}
+.temple::after{
+  content:"";position:absolute;left:63%;top:57%;width:21vw;height:26vh;z-index:5;
+  pointer-events:none;border-radius:50%;
+  background:radial-gradient(ellipse,rgba(235,170,88,.35),rgba(196,126,55,.11) 44%,transparent 72%);
+  filter:blur(22px);animation:gateGlow 6.5s ease-in-out infinite alternate;
+}
+.beam{
+  opacity:.68;
+  background:linear-gradient(238deg,transparent 18%,rgba(226,235,231,.08) 33%,rgba(226,235,231,.14) 40%,rgba(226,235,231,.025) 52%,transparent 64%);
+}
+.mist-a,.mist-b,.mist-c{opacity:.06}
+.plaque{top:27vh;right:4.5vw;opacity:.68}
+.entry{
+  background:
+    linear-gradient(90deg,rgba(3,7,10,.86),rgba(3,7,10,.3) 56%,rgba(3,7,10,.68)),
+    url("../图片/问签-背景.jpg") center center/cover no-repeat;
+}
+.incense,.lamp{display:none!important}
+.tube-wrap::after{
+  content:"";position:absolute;left:50%;bottom:20px;width:235px;height:54px;
+  transform:translateX(-50%);z-index:0;pointer-events:none;border-radius:50%;
+  background:radial-gradient(ellipse,rgba(218,158,82,.2),rgba(218,158,82,.05) 48%,transparent 74%);
+  filter:blur(12px);
+}
+.table{
+  background:linear-gradient(180deg,transparent 0%,rgba(4,8,10,.22) 18%,rgba(4,8,10,.66) 52%,rgba(3,7,9,.94) 100%);
+  border-top:1px solid rgba(176,138,74,.08);
+  box-shadow:0 -30px 80px rgba(0,0,0,.32),inset 0 10px 30px rgba(0,0,0,.4);
+}
+.stone-lantern{
+  position:absolute;left:1.8vw;bottom:4vh;height:44vh;width:calc(44vh * .579);z-index:13;
+  pointer-events:none;
+  -webkit-mask-image:linear-gradient(180deg,#000 0 84%,rgba(0,0,0,.84) 93%,transparent 100%);
+  mask-image:linear-gradient(180deg,#000 0 84%,rgba(0,0,0,.84) 93%,transparent 100%);
+  animation:lanternFloat 8.5s ease-in-out infinite;
+}
+.stone-lantern img{
+  width:100%;height:100%;display:block;object-fit:contain;object-position:50% 0%;
+  filter:brightness(.94) contrast(1.05) saturate(.94) drop-shadow(0 18px 24px rgba(0,0,0,.55));
+}
+.stone-lantern::before{
+  content:"";position:absolute;left:-8%;right:-8%;bottom:-6%;height:30%;z-index:2;
+  background:radial-gradient(ellipse at 50% 70%,rgba(4,8,12,.96),rgba(4,8,12,.55) 45%,transparent 74%);
+  filter:blur(10px);pointer-events:none;
+}
+.stone-lantern::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(180deg,transparent 52%,rgba(3,7,10,.22) 70%,rgba(3,7,10,.68) 88%,rgba(3,7,10,.96) 100%);
+}
+.lantern-halo{
+  position:absolute;left:50%;top:48%;width:72%;height:36%;
+  transform:translate(-50%,-50%);border-radius:50%;
+  background:radial-gradient(ellipse,rgba(230,166,84,.28),rgba(230,166,84,.08) 48%,transparent 72%);
+  filter:blur(18px);animation:lanternHalo 5.2s ease-in-out infinite alternate;
+}
+body.entered .stone-lantern{animation:lanternFloat 8.5s ease-in-out infinite,reveal 1.8s ease both}
+body.entered .stone-lantern img{animation:lanternLight 5.4s ease-in-out infinite alternate}
+@keyframes lanternFloat{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-5px)}
+}
+@keyframes lanternHalo{
+  from{opacity:.55;transform:translate(-50%,-50%) scale(.96)}
+  to{opacity:.9;transform:translate(-50%,-50%) scale(1.06)}
+}
+@keyframes lanternLight{
+  from{filter:brightness(.86) contrast(1.06) saturate(.9)}
+  to{filter:brightness(.94) contrast(1.08) saturate(.98)}
+}
+@keyframes gateGlow{
+  from{opacity:.55;transform:translate(-8%,3%) scale(.96)}
+  to{opacity:.9;transform:translate(-2%,-2%) scale(1.08)}
+}
+@media(max-width:760px){
+  .temple::after{left:54%;top:49%;width:42vw;height:26vh}
+  .stone-lantern{height:34vh;width:calc(34vh * .579);left:-4vw;bottom:2vh;opacity:.82}
+  .plaque{top:23vh;right:2vw;opacity:.5}
+}
