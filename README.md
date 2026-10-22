@@ -1,13 +1,14 @@
 # 给洗衣粉的惊喜
 
-燕云十六声主题的静态生日站点。没有构建步骤，`index.html` 就是主站入口。
+燕云十六声主题的静态生日站点。`index.html` 是主站入口；Cloudflare 部署前会运行 `build.js`，只把站点文件复制到 `public/`。
 
 ## 本地预览
 
 在项目根目录运行：
 
 ```bash
-python -m http.server 8000
+node build.js
+python -m http.server 8000 --directory public
 ```
 
 打开：
@@ -40,14 +41,16 @@ https://github.com/Francy666666/yanyun
 | 设置 | 值 |
 | --- | --- |
 | Framework preset | None |
-| Build command | `exit 0`（或留空） |
-| Build output directory | `/` |
+| Build command | `node build.js` |
+| Build output directory | `public` |
 | Root directory | 留空 |
 
-如果控制台不接受 `/`，把 Build output directory 改成 `.`。
+`build.js` 只复制页面、`assets/`、`图片/` 和两条装X视频到 `public/`，不会把 `node_modules/`、`preview/`、原始视频或旧图带进部署包。
 
 7. 点击 **Save and Deploy**。
 8. 部署完成后会得到一个 `https://项目名.pages.dev` 地址。
+
+> 注意：如果你在 Cloudflare 里看到的是 **Worker**（日志里出现 `npx wrangler deploy`、`Worker Name`），那不是 Pages，最终网址会是 `*.workers.dev`。请重新在 **Pages → Connect to Git** 创建项目；或者把当前 Worker 的构建命令改成 `node build.js`，部署命令保留 `npx wrangler deploy`。
 
 以后每次 `git push` 到 `main`，Cloudflare Pages 会自动重新部署。
 
@@ -77,6 +80,8 @@ motion.html             主站外壳
 问签.html               古寺问签
 装X.html                装X时刻
 内容配置.js             栏目与场景配置
+build.js                生成 public/ 部署目录
+wrangler.jsonc          Worker 模式下的静态资源目录（public）
 assets/                 样式、脚本、Three.js 打包文件
 图片/                   场景图、牌面、卡片
 视频/                   装X两条视频
