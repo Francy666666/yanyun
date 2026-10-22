@@ -549,7 +549,7 @@ body:has(.tube-wrap.shaking) .tube-hint{color:var(--gold);text-shadow:0 0 16px r
    问签退出铃铛
    ========================================================= */
 .back-to-main{
-  width:110px!important;height:160px!important;
+  width:clamp(30px,3vw,44px)!important;height:clamp(44px,4.35vw,64px)!important;
   display:block!important;overflow:visible!important;
   filter:none!important;
   -webkit-tap-highlight-color:transparent;
@@ -569,12 +569,12 @@ body:has(.tube-wrap.shaking) .tube-hint{color:var(--gold);text-shadow:0 0 16px r
   -webkit-user-drag:none;
 }
 .bell-aura{
-  position:absolute;left:50%;top:48%;width:150px;height:150px;
+  position:absolute;left:50%;top:48%;width:clamp(52px,5vw,72px);height:clamp(52px,5vw,72px);
   transform:translate(-50%,-50%);border-radius:50%;
   background:
     radial-gradient(circle at 50% 45%,rgba(116,255,181,.28),transparent 42%),
     radial-gradient(circle at 50% 62%,rgba(255,170,80,.18),transparent 64%);
-  filter:blur(12px);opacity:.65;pointer-events:none;
+  filter:blur(8px);opacity:.65;pointer-events:none;
   animation:bellAura 4.6s ease-in-out infinite;
 }
 .bell-shine{
@@ -588,17 +588,17 @@ body:has(.tube-wrap.shaking) .tube-hint{color:var(--gold);text-shadow:0 0 16px r
   transition:opacity .25s;
 }
 .bell-glow{
-  position:absolute;left:50%;top:54%;width:58px;height:88px;
+  position:absolute;left:50%;top:54%;width:28px;height:42px;
   transform:translate(-50%,-50%);pointer-events:none;
   background:linear-gradient(180deg,rgba(120,255,180,.2),rgba(255,180,80,.12) 55%,transparent);
-  filter:blur(10px);opacity:.35;
+  filter:blur(6px);opacity:.35;
   transition:opacity .35s;
 }
 .bell-ring{
-  position:absolute;left:50%;top:46%;width:52px;height:52px;
-  margin:-26px 0 0 -26px;border-radius:50%;
+  position:absolute;left:50%;top:46%;width:28px;height:28px;
+  margin:-14px 0 0 -14px;border-radius:50%;
   border:1px solid rgba(150,255,195,.6);
-  box-shadow:0 0 18px rgba(150,255,195,.35),inset 0 0 18px rgba(150,255,195,.2);
+  box-shadow:0 0 10px rgba(150,255,195,.35),inset 0 0 10px rgba(150,255,195,.2);
   opacity:0;pointer-events:none;
 }
 .back-to-main:hover .bell-img,
@@ -663,7 +663,14 @@ body:has(.tube-wrap.shaking) .tube-hint{color:var(--gold);text-shadow:0 0 16px r
   100%{opacity:0;transform:translate(-50%,-50%) scale(2.1)}
 }
 @media(max-width:760px){
-  .back-to-main{width:90px!important;height:132px!important}
-  .bell-aura{width:118px;height:118px}
-  .bell-glow{width:54px;height:82px}
+  .back-to-main{width:32px!important;height:48px!important}
+  .bell-aura{width:54px;height:54px}
+  .bell-glow{width:22px;height:32px}
+  .bell-ring{width:22px;height:22px;margin:-11px 0 0 -11px}
+}
+
+/* 新签筒图片 */
+.tube-img{
+  width:100%;height:100%;display:block;object-fit:contain;
+  pointer-events:none;user-select:none;-webkit-user-drag:none;
 }

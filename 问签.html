@@ -79,68 +79,7 @@
       <div class="tube-wrap" id="签筒区域">
         <div class="tube-shadow" aria-hidden="true"></div>
         <div class="tube" id="签筒" role="button" tabindex="0" aria-label="按住摇签，松手落签">
-          <svg viewBox="0 0 200 280" aria-hidden="true">
-            <defs>
-              <linearGradient id="tubeGrad" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0" stop-color="#1a140d"/>
-                <stop offset=".18" stop-color="#4a3a25"/>
-                <stop offset=".42" stop-color="#7d6543"/>
-                <stop offset=".62" stop-color="#5a472e"/>
-                <stop offset=".84" stop-color="#332718"/>
-                <stop offset="1" stop-color="#120e08"/>
-              </linearGradient>
-              <linearGradient id="stickGrad" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0" stop-color="#8d7956"/>
-                <stop offset=".45" stop-color="#d8c9a4"/>
-                <stop offset="1" stop-color="#796645"/>
-              </linearGradient>
-            </defs>
-
-            <!-- 筒身 -->
-            <path d="M32 88 C32 72 58 62 100 62 C142 62 168 72 168 88 L160 238 C158 256 136 266 100 266 C64 266 42 256 40 238 Z" fill="url(#tubeGrad)"/>
-            <path d="M52 96 C50 150 48 200 47 238" stroke="#d8c9a4" stroke-width="2" opacity=".12" fill="none"/>
-            <path d="M40 146 C70 155 130 155 160 146" stroke="#17120b" stroke-width="3" opacity=".5" fill="none"/>
-            <path d="M42 196 C72 205 128 205 158 196" stroke="#17120b" stroke-width="3" opacity=".42" fill="none"/>
-
-            <!-- 筒口 -->
-            <ellipse cx="100" cy="86" rx="68" ry="18" fill="#0d0a06"/>
-            <ellipse cx="100" cy="86" rx="68" ry="18" fill="none" stroke="#8a7350" stroke-width="4"/>
-
-            <!-- 竹签 -->
-            <g class="stick" transform="translate(58 84) rotate(-9)">
-              <rect x="-3.5" y="-76" width="7" height="80" rx="3.5" fill="url(#stickGrad)"/>
-              <line x1="-3" y1="-54" x2="3" y2="-54" stroke="#6b5838" stroke-width="1" opacity=".6"/>
-            </g>
-            <g class="stick" transform="translate(74 86) rotate(-4)">
-              <rect x="-3.5" y="-66" width="7" height="70" rx="3.5" fill="url(#stickGrad)"/>
-              <line x1="-3" y1="-44" x2="3" y2="-44" stroke="#6b5838" stroke-width="1" opacity=".6"/>
-            </g>
-            <g class="stick" transform="translate(90 88) rotate(-1)">
-              <rect x="-3.5" y="-88" width="7" height="92" rx="3.5" fill="url(#stickGrad)"/>
-              <line x1="-3" y1="-62" x2="3" y2="-62" stroke="#6b5838" stroke-width="1" opacity=".6"/>
-            </g>
-            <g class="stick" transform="translate(106 88) rotate(3)">
-              <rect x="-3.5" y="-60" width="7" height="64" rx="3.5" fill="url(#stickGrad)"/>
-            </g>
-            <g class="stick" transform="translate(122 86) rotate(7)">
-              <rect x="-3.5" y="-80" width="7" height="84" rx="3.5" fill="url(#stickGrad)"/>
-              <line x1="-3" y1="-58" x2="3" y2="-58" stroke="#6b5838" stroke-width="1" opacity=".6"/>
-            </g>
-            <g class="stick" transform="translate(138 84) rotate(10)">
-              <rect x="-3.5" y="-70" width="7" height="74" rx="3.5" fill="url(#stickGrad)"/>
-            </g>
-            <g class="stick" transform="translate(150 82) rotate(14)">
-              <rect x="-3" y="-56" width="6" height="60" rx="3" fill="url(#stickGrad)"/>
-            </g>
-
-            <!-- 红绳与纸签 -->
-            <path d="M38 124 C64 136 136 136 162 124" stroke="#a33127" stroke-width="3" fill="none" opacity=".8"/>
-            <g transform="translate(63 172) rotate(-3)">
-              <rect width="74" height="38" rx="2" fill="#e9e3d5" opacity=".9"/>
-              <rect x="4" y="4" width="66" height="30" fill="none" stroke="#a33127" stroke-width=".8" opacity=".5"/>
-              <text x="37" y="27" text-anchor="middle" font-size="21" fill="#1a1712" font-family="serif">问</text>
-            </g>
-          </svg>
+          <img class="tube-img" src="图片/签筒.png" alt="" draggable="false">
         </div>
         <p class="tube-hint" id="提示">按住摇签，松手落签</p>
       </div>
