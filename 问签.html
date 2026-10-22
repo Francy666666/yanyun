@@ -75,10 +75,11 @@
     </div>
     <div class="lamp" aria-hidden="true"></div>
 
-    <div class="stone-lantern" aria-hidden="true">
-      <span class="lantern-halo"></span>
+    <button class="stone-lantern" id="石灯" type="button" aria-label="点亮石灯，看看灯下藏着什么">
+      <span class="lantern-halo" aria-hidden="true"></span>
       <img src="图片/石灯.png" alt="" draggable="false">
-    </div>
+      <span class="灯下绳" aria-hidden="true"></span>
+    </button>
 
     <section class="altar" aria-label="签筒">
       <div class="tube-wrap" id="签筒区域">
@@ -152,6 +153,34 @@
         <p class="entry-note">一事一签　心诚则灵</p>
       </div>
     </div>
+
+    <section class="秘密" id="秘密" hidden aria-modal="true" role="dialog" aria-labelledby="秘密题">
+      <div class="秘密罩" id="秘密罩"></div>
+      <div class="秘密纸" id="秘密纸">
+        <button class="秘密关" id="秘密关" type="button" aria-label="收起">×</button>
+        <header class="秘密头">
+          <p class="秘密寺">先觉菩萨寺 · 灯下</p>
+          <h2 id="秘密题">你发现了<br><span>先觉菩萨的小秘密</span></h2>
+          <p class="秘密引" id="秘密引">灯座下，压着一枚旧铜钱。</p>
+        </header>
+
+        <div class="钱盘" id="钱盘" aria-label="铜钱盘">
+          <button class="红钱" id="红钱" type="button" aria-label="拾起红绳铜钱">
+            <i class="红绳" aria-hidden="true"></i>
+            <i class="钱孔" aria-hidden="true"></i>
+          </button>
+          <p class="钱提示" id="钱提示">拾起那枚系红绳的</p>
+        </div>
+
+        <div class="秘密文" id="秘密文" hidden>
+          <p class="签句">灯下见金，心上见人。</p>
+          <p class="签解">菩萨说：你惦记的那个人，也在惦记你。</p>
+          <span class="秘密印" aria-hidden="true">先觉</span>
+        </div>
+
+        <button class="秘密收" id="秘密收" type="button" hidden>收下这枚铜钱</button>
+      </div>
+    </section>
   </main>
 
   <script src="assets/问签数据.js"></script>

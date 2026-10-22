@@ -379,3 +379,132 @@
     $('#收下此签').textContent = '已收下此签';
   });
 })();
+
+/* =========================================================
+   点石灯 · 先觉菩萨的小秘密
+   ========================================================= */
+const 石灯 = document.getElementById('石灯');
+const 秘密 = document.getElementById('秘密');
+const 秘密罩 = document.getElementById('秘密罩');
+const 秘密纸 = document.getElementById('秘密纸');
+const 秘密关 = document.getElementById('秘密关');
+const 秘密引 = document.getElementById('秘密引');
+const 钱盘 = document.getElementById('钱盘');
+const 红钱 = document.getElementById('红钱');
+const 秘密文 = document.getElementById('秘密文');
+const 秘密收 = document.getElementById('秘密收');
+let 灯拾过 = false;
+let 钱音频 = null;
+
+function 钱响() {
+  try {
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return;
+    if (!钱音频) 钱音频 = new AC();
+    if (钱音频.state === 'suspended') 钱音频.resume();
+    const t = 钱音频.currentTime;
+    [0, .075, .16].forEach((延迟, i) => {
+      const o = 钱音频.createOscillator();
+      const g = 钱音频.createGain();
+      o.type = 'triangle';
+      o.frequency.setValueAtTime(1180 + i * 90, t + 延迟);
+      g.gain.setValueAtTime(.0001, t + 延迟);
+      g.gain.exponentialRampToValueAtTime(.022, t + 延迟 + .008);
+      g.gain.exponentialRampToValueAtTime(.0001, t + 延迟 + .16);
+      o.connect(g); g.connect(钱音频.destination);
+      o.start(t + 延迟); o.stop(t + 延迟 + .18);
+    });
+  } catch (_) {}
+}
+
+function 生成钱() {
+  if (钱盘.dataset.生成 === '1') return;
+  const w = 钱盘.clientWidth || 360;
+  const h = 钱盘.clientHeight || 180;
+  const 字 = ['先', '觉', '平', '安', '一', '念'];
+  for (let i = 0; i < 30; i++) {
+    const c = document.createElement('i');
+    c.className = '铜钱';
+    c.dataset.字 = 字[i % 字.length];
+    const x = (Math.random() - .5) * w * .82;
+    const y = (Math.random() - .5) * h * .62;
+    c.style.setProperty('--x', x.toFixed(1) + 'px');
+    c.style.setProperty('--y', y.toFixed(1) + 'px');
+    c.style.setProperty('--r', (Math.random() * 300 - 150).toFixed(1) + 'deg');
+    c.style.setProperty('--d', (i * .018 + Math.random() * .12).toFixed(2) + 's');
+    c.style.zIndex = String(2 + Math.floor(Math.random() * 8));
+    钱盘.appendChild(c);
+  }
+  钱盘.dataset.生成 = '1';
+}
+
+function 开秘密() {
+  if (!secretReady()) return;
+  if (!秘密.hidden) return;
+  石灯.classList.add('亮');
+  秘密.hidden = false;
+  秘密.classList.remove('拾', '开');
+  秘密文.hidden = true;
+  秘密收.hidden = true;
+  红钱.hidden = false;
+  钱盘.hidden = false;
+  钱盘.classList.remove('收');
+  if (灯拾过) {
+    秘密.classList.add('拾');
+    钱盘.hidden = true;
+    秘密文.hidden = false;
+    秘密收.hidden = false;
+    秘密引.textContent = '灯下只剩一根红绳。';
+  } else {
+    秘密引.textContent = '灯座下，压着一枚旧铜钱。';
+    生成钱();
+  }
+  requestAnimationFrame(() => {
+    秘密.classList.add('开');
+    setTimeout(() => {
+      (灯拾过 ? 秘密收 : 红钱).focus({ preventScroll: true });
+    }, 680);
+  });
+  钱响();
+  try { navigator.vibrate?.(12); } catch (_) {}
+}
+
+function 关秘密() {
+  if (秘密.hidden || !秘密.classList.contains('开')) return;
+  秘密.classList.remove('开');
+  setTimeout(() => {
+    秘密.hidden = true;
+    if (灯拾过) 石灯.classList.add('发现');
+    石灯.focus({ preventScroll: true });
+  }, 380);
+}
+
+function secretReady() {
+  return document.body.classList.contains('entered');
+}
+
+石灯?.addEventListener('click', 开秘密);
+秘密关?.addEventListener('click', 关秘密);
+秘密罩?.addEventListener('click', 关秘密);
+秘密收?.addEventListener('click', 关秘密);
+
+红钱?.addEventListener('click', () => {
+  if (秘密.classList.contains('拾')) return;
+  灯拾过 = true;
+  秘密.classList.add('拾');
+  钱盘.classList.add('收');
+  秘密文.hidden = false;
+  秘密收.hidden = false;
+  秘密引.textContent = '灯下见金，心上见人。';
+  钱响();
+  钱响();
+  try { navigator.vibrate?.([14, 26, 40]); } catch (_) {}
+  setTimeout(() => {
+    红钱.hidden = true;
+    秘密收.focus({ preventScroll: true });
+  }, 620);
+});
+
+addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && !秘密.hidden) 关秘密();
+});
