@@ -22,76 +22,12 @@
       <div class="site-date" aria-hidden="true">10月25日</div>
     </header>
 
-    <a class="back-to-main" href="问签.html#入殿层" aria-label="返回入殿">
-      <span class="sword-aura" aria-hidden="true"></span>
-      <svg class="sword" viewBox="0 0 200 56" aria-hidden="true">
-        <defs>
-          <linearGradient id="bladeIce" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stop-color="#5fa8d4"/>
-            <stop offset=".2" stop-color="#dff8ff"/>
-            <stop offset=".45" stop-color="#ffffff"/>
-            <stop offset=".62" stop-color="#eafaff"/>
-            <stop offset=".82" stop-color="#b9e6fa"/>
-            <stop offset="1" stop-color="#4b97c6"/>
-          </linearGradient>
-          <linearGradient id="hiltIce" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stop-color="#6aaed6"/>
-            <stop offset=".35" stop-color="#f4fdff"/>
-            <stop offset=".7" stop-color="#c7ecfb"/>
-            <stop offset="1" stop-color="#5a9fc7"/>
-          </linearGradient>
-          <linearGradient id="iceLine" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0" stop-color="#6ab8e8" stop-opacity="0"/>
-            <stop offset=".4" stop-color="#9cdcff" stop-opacity=".6"/>
-            <stop offset="1" stop-color="#eafcff" stop-opacity=".95"/>
-          </linearGradient>
-          <radialGradient id="gemIce" cx=".5" cy=".4" r=".6">
-            <stop offset="0" stop-color="#ffffff"/>
-            <stop offset=".45" stop-color="#c8f2ff"/>
-            <stop offset="1" stop-color="#4ba6d8"/>
-          </radialGradient>
-          <filter id="iceGlow" x="-120%" y="-120%" width="340%" height="340%">
-            <feGaussianBlur stdDeviation="2" result="b"/>
-            <feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-          </filter>
-        </defs>
-
-        <!-- 寒气丝带 -->
-        <g class="ice-ribbons" fill="none" stroke="url(#iceLine)" stroke-width="1.3" stroke-linecap="round" filter="url(#iceGlow)">
-          <path class="ice-ribbon" d="M150 28 C168 8 192 14 196 30 C199 42 184 50 170 42"/>
-          <path class="ice-ribbon" d="M154 38 C172 52 194 46 196 30"/>
-        </g>
-
-        <!-- 剑身 -->
-        <path class="sword-blade" d="M4 28 C46 19 98 16 146 16 L158 28 L146 40 C98 40 46 37 4 28 Z" fill="url(#bladeIce)" stroke="#dff8ff" stroke-width=".6" filter="url(#iceGlow)"/>
-        <path class="sword-ridge" d="M10 28 C56 25 104 22 150 21.5" stroke="#ffffff" stroke-width=".9" opacity=".65"/>
-        <path class="sword-edge" d="M6 25 C50 19 100 17 146 16.5" stroke="#9cdcff" stroke-width=".7" opacity=".8"/>
-
-        <!-- 护手 -->
-        <path class="sword-guard" d="M154 10 C164 17 166 39 154 46 C158 36 158 20 154 10 Z" fill="url(#hiltIce)" stroke="#ecfdff" stroke-width=".7" filter="url(#iceGlow)"/>
-        <path class="guard-gem" d="M158 21 L164 28 L158 35 L152 28 Z" fill="url(#gemIce)" stroke="#fff" stroke-width=".6"/>
-
-        <!-- 剑柄与剑首 -->
-        <rect x="162" y="24" width="26" height="8" rx="4" fill="url(#hiltIce)"/>
-        <path class="sword-wrap" d="M166 24.5 L168 31.5 M172 24.5 L174 31.5 M178 24.5 L180 31.5 M184 24.5 L186 31.5" stroke="#ffffff" stroke-width=".8" opacity=".5"/>
-        <path class="sword-pommel" d="M190 23 L198 28 L190 33 L184 28 Z" fill="url(#gemIce)" stroke="#eafcff" stroke-width=".7" filter="url(#iceGlow)"/>
-
-        <!-- 冰晶 -->
-        <g class="ice-shards" fill="#dff8ff" opacity=".8" filter="url(#iceGlow)">
-          <path d="M140 18 L146 10 L144 22 Z"/>
-          <path d="M146 42 L152 50 L138 46 Z"/>
-          <path d="M120 14 L124 6 L126 18 Z"/>
-        </g>
-      </svg>
-
-      <i class="frost" style="--x:10px;--y:14px;--d:-.2s"></i>
-      <i class="frost" style="--x:26px;--y:30px;--d:-1.1s"></i>
-      <i class="frost" style="--x:40px;--y:12px;--d:-2.1s"></i>
-      <i class="frost" style="--x:52px;--y:24px;--d:-.7s"></i>
-      <i class="frost" style="--x:18px;--y:34px;--d:-1.6s"></i>
-      <i class="frost" style="--x:46px;--y:34px;--d:-2.7s"></i>
-      <i class="frost" style="--x:32px;--y:8px;--d:-.4s"></i>
-      <i class="frost" style="--x:58px;--y:18px;--d:-1.9s"></i>
+    <a class="back-to-main" href="问签.html#入殿层" aria-label="退出问签，返回入殿">
+      <span class="bell-aura" aria-hidden="true"></span>
+      <span class="bell-glow" aria-hidden="true"></span>
+      <img class="bell-img" src="图片/退出-铃铛.png" alt="" draggable="false">
+      <span class="bell-shine" aria-hidden="true"></span>
+      <i class="bell-ring" aria-hidden="true"></i>
     </a>
     <div class="sky" aria-hidden="true"></div>
     <div class="moon" aria-hidden="true"></div>

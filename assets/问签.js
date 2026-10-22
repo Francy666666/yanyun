@@ -18,7 +18,7 @@
   const 掷筊按钮 = $('#掷筊');
   const 掷筊提示 = $('#掷筊提示');
   const 掷筊结果 = $('#掷筊结果');
-  const 返回剑 = document.querySelector('.back-to-main');
+  const 返回铃 = document.querySelector('.back-to-main');
 
   // 轻微视差：只移动背景层和光束，避免影响触控板操作。
   let 视差排队 = false;
@@ -42,14 +42,16 @@
   let 掷筊次数 = 0;
   let 入殿隐藏计时 = null;
 
-  返回剑?.addEventListener('click', (e) => {
+  返回铃?.addEventListener('click', (e) => {
     e.preventDefault();
-    if (返回剑.classList.contains('sword-shrink')) return;
-    返回剑.classList.add('sword-shrink');
-    const 等待 = matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 420;
+    if (返回铃.classList.contains('bell-exit')) return;
+    返回铃.classList.add('bell-exit');
+    敲钟(0.28, 238);
+    try { navigator.vibrate?.([18, 28, 46]); } catch (_) {}
+    const 等待 = matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 620;
     setTimeout(() => {
       返回入殿();
-      setTimeout(() => 返回剑.classList.remove('sword-shrink'), 700);
+      setTimeout(() => 返回铃.classList.remove('bell-exit'), 500);
     }, 等待);
   });
 
