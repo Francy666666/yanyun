@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>装X时刻 · 先觉菩萨寺</title>
+  <meta name="description" content="白日空台，一次点戏。">
+  <script>if(new URLSearchParams(location.search).has('embed'))document.documentElement.classList.add('embed');</script>
+  <link rel="stylesheet" href="assets/装X.css">
+</head>
+<body>
+  <div class="装X 主题日" id="装X">
+    <canvas class="粒子" id="粒子" aria-hidden="true"></canvas>
+
+    <div class="背景" aria-hidden="true">
+      <div class="日轮"><i class="棂格"></i></div>
+      <div class="红柱 左"></div>
+      <div class="红柱 右"></div>
+      <div class="光斑"></div>
+      <div class="雾"></div>
+    </div>
+
+    <div class="舞台">
+      <div class="水台" aria-hidden="true"></div>
+
+      <div class="大台" id="大台">
+        <div class="台框" aria-hidden="true"></div>
+        <video id="甲" src="视频/装X-亮相.mp4" poster="图片/装X-亮相.jpg" playsinline preload="metadata"></video>
+        <video id="乙" src="视频/装X-正片.mp4" poster="图片/装X-正片.jpg" playsinline preload="metadata"></video>
+        <span class="台签" id="台签">装X时刻</span>
+      </div>
+
+      <div class="烛台 左" aria-label="红烛">
+        <button class="烛 亮" data-candle aria-label="点亮红烛"><i></i></button>
+        <button class="烛" data-candle aria-label="点亮红烛"><i></i></button>
+      </div>
+      <div class="烛台 右" aria-label="红烛">
+        <button class="烛" data-candle aria-label="点亮红烛"><i></i></button>
+      </div>
+    </div>
+
+    <div class="纱幕" id="纱幕">
+      <div class="纱 纱左"></div>
+      <div class="纱 纱右"></div>
+    </div>
+
+    <div class="选择" id="选择">
+      <button class="戏牌 甲牌" data-act="A" aria-label="选亮相">
+        <i class="绳" aria-hidden="true"></i>
+        <span>亮相</span>
+        <small>0:05</small>
+      </button>
+      <button class="戏牌 乙牌" data-act="B" aria-label="选正片">
+        <i class="绳" aria-hidden="true"></i>
+        <span>正片</span>
+        <small>0:26</small>
+      </button>
+    </div>
+
+    <header class="题">
+      <h1>装<span>X</span>时刻</h1>
+      <p>THE MOMENT</p>
+    </header>
+
+    <button class="退出" id="退出" title="退出" aria-label="退出本段，回到开场">
+      <span class="退面"><img src="图片/退出-面具.jpg" alt=""></span>
+    </button>
+
+    <p class="提示" id="提示">点一块戏牌，开一出戏</p>
+
+    <div class="控制" id="控制">
+      <button class="控" id="播放" aria-label="播放或暂停">❚❚</button>
+      <div class="进度" id="进度"><i id="进度条"></i></div>
+      <span class="时间" id="时间">0:00 / 0:00</span>
+      <button class="控" id="静音" aria-label="静音">声</button>
+      <button class="控 入戏" id="入戏">入戏</button>
+    </div>
+
+    <button class="印 彩" id="彩" aria-label="喝彩">彩</button>
+    <button class="印 章" id="章" aria-label="按住蓄力">装X</button>
+
+    <div class="谢幕" id="谢幕" hidden>
+      <p class="谢幕小">THE END</p>
+      <h2>装X指数 <b id="指数">0.0</b></h2>
+      <div class="谢幕印" id="谢幕印">绝</div>
+      <div class="谢幕按钮">
+        <button id="重看">重看本段</button>
+        <button id="收戏">收戏</button>
+      </div>
+    </div>
+
+    <div class="换幕" id="换幕" aria-hidden="true"></div>
+    <div class="盖章" id="盖章" aria-hidden="true">绝</div>
+  </div>
+
+  <script src="assets/装X.bundle.js"></script>
+</body>
+</html>

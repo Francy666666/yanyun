@@ -1,0 +1,546 @@
+/* =========================================================
+   先觉菩萨寺 · 问签
+   深山古寺 / 雪夜墨 / 全套仪式
+   ========================================================= */
+
+:root{
+  --ink:#0b1114;
+  --ink-2:#151d21;
+  --paper:#e9e3d5;
+  --paper-2:#d8d0be;
+  --mist:#8fa0a3;
+  --cinnabar:#a33127;
+  --gold:#b08a4a;
+  --bamboo:#6e5b3e;
+  --serif:"Songti SC","STSong","SimSun","Noto Serif SC",serif;
+  --brush:"STXingkai","华文行楷","KaiTi","STKaiti",serif;
+  --mx:0;--my:0;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;background:#070b0d;color:var(--paper);
+  font-family:var(--serif);
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+button{font-family:inherit;color:inherit}
+::selection{background:rgba(163,49,39,.45);color:#f4eee0}
+
+.temple{
+  position:relative;min-height:100svh;overflow:hidden;isolation:isolate;
+  background:#070b0d;
+}
+/* ---------- 首页同款导航（只在入殿页出现） ---------- */
+.site-topbar{
+  position:fixed;inset:0 0 auto 0;z-index:120;
+  display:flex;align-items:center;justify-content:space-between;gap:24px;
+  padding:22px clamp(20px,3.6vw,52px);
+  color:#f0e5cd;
+  background:linear-gradient(180deg,rgba(6,5,9,.55),rgba(6,5,9,0));
+  pointer-events:none;
+  transition:opacity .55s,visibility .55s;
+}
+body.entered .site-topbar{opacity:0;visibility:hidden;pointer-events:none}
+.site-topbar a,.site-date{pointer-events:auto}
+.site-brand{display:flex;align-items:baseline;gap:12px;text-decoration:none;color:inherit}
+.site-brand-cn{font-family:var(--serif);font-size:17px;letter-spacing:.26em;text-shadow:0 1px 18px rgba(0,0,0,.6)}
+.site-brand-en{font-size:8px;letter-spacing:.34em;opacity:.48}
+.site-nav{display:flex;gap:clamp(16px,2.4vw,34px);font-size:12px;letter-spacing:.24em}
+.site-nav a{position:relative;padding:4px 0;opacity:.7;transition:opacity .35s ease;text-decoration:none;color:inherit}
+.site-nav a::after{
+  content:"";position:absolute;left:0;right:100%;bottom:-2px;height:1px;
+  background:var(--gold);transition:right .45s cubic-bezier(.2,.7,.2,1);
+}
+.site-nav a:hover{opacity:1}
+.site-nav a:hover::after{right:0}
+.site-nav a.active{opacity:1}
+.site-nav a.active::after{right:0}
+.site-date{font-size:10px;letter-spacing:.28em;opacity:.42}
+
+/* 嵌在主站 iframe 里时：隐藏问签自己的导航，并给外壳导航让出空间 */
+.embed .site-topbar{display:none!important}
+.embed .back-to-main{top:82px;left:12px}
+.embed .card-panel{padding-top:76px}
+.embed .scroll-paper{max-height:calc(100svh - 98px)}
+
+/* 横置冰剑：宽度约为“问”字的一半 */
+.back-to-main{
+  position:absolute;top:26px;left:clamp(12px,1.5vw,20px);z-index:110;
+  width:64px;height:44px;display:grid;place-items:center;text-decoration:none;
+  opacity:0;visibility:hidden;pointer-events:none;
+  filter:drop-shadow(0 5px 14px rgba(0,0,0,.5)) drop-shadow(0 0 10px rgba(160,225,255,.28));
+  transition:opacity .6s,visibility .6s,filter .4s;
+}
+body.entered .back-to-main{opacity:.95;visibility:visible;pointer-events:auto}
+.back-to-main .sword{
+  width:clamp(21px,2.9vw,42px);height:auto;overflow:visible;display:block;
+  animation:swordFloat 5.4s ease-in-out infinite alternate;
+}
+.sword-aura{
+  position:absolute;left:50%;top:50%;width:54px;height:26px;
+  transform:translate(-50%,-50%);
+  background:radial-gradient(ellipse at 50% 50%,rgba(190,240,255,.34),rgba(90,170,220,.1) 50%,transparent 74%);
+  filter:blur(9px);pointer-events:none;opacity:.85;
+  animation:auraBreathe 4.8s ease-in-out infinite;
+}
+.back-to-main::before{
+  content:"";position:absolute;left:50%;top:50%;width:58px;height:16px;
+  transform:translate(-50%,-50%);
+  background:linear-gradient(90deg,transparent,rgba(190,235,255,.16),transparent);
+  filter:blur(9px);pointer-events:none;
+  animation:frostDrift 6s ease-in-out infinite;
+}
+.ice-ribbon{stroke-dasharray:38 120;animation:iceFlow 7s linear infinite}
+.ice-ribbon:nth-child(2){animation-duration:9.5s;animation-direction:reverse;opacity:.7}
+.back-to-main:hover{
+  opacity:1;
+  filter:drop-shadow(0 6px 18px rgba(0,0,0,.45)) drop-shadow(0 0 24px rgba(170,230,255,.8));
+}
+.back-to-main:hover .sword{animation-duration:3s}
+.back-to-main:hover .sword-aura{opacity:1}
+.back-to-main.sword-shrink{animation:swordShrink .42s cubic-bezier(.4,0,.8,.2) forwards;pointer-events:none}
+.frost{
+  position:absolute;left:var(--x);top:var(--y);width:3px;height:3px;border-radius:50%;
+  background:#eafcff;box-shadow:0 0 7px 2px #8fd8ff;opacity:0;pointer-events:none;
+  animation:frostFloat 4.2s ease-in-out var(--d,0s) infinite;
+}
+
+/* ---------- 天、月、山、雾、光 ---------- */
+.sky{
+  position:absolute;inset:0;z-index:0;
+  transform:translate3d(calc(var(--mx) * -5px),calc(var(--my) * -3px),0) scale(1.02);
+  transition:transform 1.2s cubic-bezier(.2,.7,.2,1);
+  background:
+    radial-gradient(120% 80% at 50% 16%,#172429 0%,#0c1418 44%,#05080a 100%);
+}
+.moon{
+  position:absolute;top:10vh;right:17vw;width:118px;height:118px;z-index:1;
+  border-radius:50%;opacity:.2;filter:blur(1.5px);
+  transform:translate3d(calc(var(--mx) * -11px),calc(var(--my) * -7px),0);
+  background:radial-gradient(circle at 42% 40%,#f0ead8,#cfc8b4 52%,rgba(207,200,180,0) 72%);
+}
+.mountains{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none}
+.m-far{fill:#6f8488;opacity:.16;filter:blur(5px)}
+.m-mid{fill:#223136;opacity:.62;filter:blur(1.5px)}
+.m-near{fill:#080d10;opacity:.98}
+.pagoda{opacity:.82;filter:blur(.4px)}
+
+.beam{
+  position:absolute;inset:0;z-index:3;pointer-events:none;mix-blend-mode:screen;
+  background:linear-gradient(112deg,transparent 20%,rgba(233,227,213,.05) 34%,rgba(233,227,213,.1) 41%,rgba(233,227,213,.02) 50%,transparent 62%);
+  filter:blur(10px);transform:translate3d(calc(var(--mx) * 8px),calc(var(--my) * 4px),0);
+}
+
+.mist{
+  position:absolute;z-index:2;border-radius:50%;background:#a7b6b6;
+  filter:blur(42px);opacity:.07;pointer-events:none;
+}
+.mist-a{left:-15vw;top:36vh;width:70vw;height:18vh;animation:mistA 24s ease-in-out infinite alternate}
+.mist-b{right:-25vw;top:52vh;width:60vw;height:16vh;animation:mistB 31s ease-in-out -9s infinite alternate}
+.mist-c{left:20vw;top:66vh;width:55vw;height:12vh;opacity:.05;animation:mistA 38s ease-in-out -14s infinite alternate-reverse}
+
+.dust{
+  position:absolute;inset:0;z-index:5;pointer-events:none;opacity:.2;
+  background-image:radial-gradient(circle,rgba(233,227,213,.75) 0 1px,transparent 1.4px);
+  background-size:97px 113px;
+  animation:dustMove 30s linear infinite;
+  transform:translate3d(calc(var(--mx) * 3px),calc(var(--my) * 2px),0);
+}
+
+/* ---------- 供桌 ---------- */
+.table{
+  position:absolute;left:0;right:0;bottom:0;height:30vh;z-index:4;
+  background:
+    radial-gradient(55% 100% at 62% 0%,rgba(176,138,74,.16),transparent 72%),
+    linear-gradient(180deg,#1a130d 0%,#0d0906 55%,#060403 100%);
+  border-top:2px solid rgba(176,138,74,.18);
+  box-shadow:inset 0 10px 30px rgba(0,0,0,.55),0 -40px 90px rgba(0,0,0,.65);
+}
+.table::after{
+  content:"";position:absolute;inset:0;opacity:.37;
+  background:repeating-linear-gradient(92deg,transparent 0 18px,rgba(233,227,213,.035) 18px 19px);
+}
+
+/* ---------- 匾额与题字 ---------- */
+.plaque{
+  position:absolute;top:7vh;right:7vw;z-index:10;
+  writing-mode:vertical-rl;padding:18px 12px;
+  background:linear-gradient(90deg,#100c08,#1c1510);
+  border:1px solid rgba(176,138,74,.28);
+  box-shadow:0 24px 60px rgba(0,0,0,.55);
+}
+.plaque span{
+  font-family:var(--brush);font-size:22px;letter-spacing:.34em;
+  color:rgba(233,227,213,.5);
+}
+
+.sig-head{
+  position:absolute;top:8vh;left:7vw;z-index:10;
+  display:flex;flex-direction:row-reverse;align-items:flex-start;gap:18px;
+  text-shadow:0 4px 30px #000;
+}
+.temple-name{
+  margin:0;writing-mode:vertical-rl;white-space:nowrap;
+  font-size:12px;letter-spacing:.5em;color:var(--gold);opacity:.8;
+}
+.sig-head h1{
+  margin:0;writing-mode:vertical-rl;white-space:nowrap;
+  font-family:var(--brush);font-weight:400;
+  font-size:clamp(54px,6vw,88px);line-height:1.1;letter-spacing:.18em;
+  color:var(--paper);
+}
+.sig-sub{
+  margin:0;writing-mode:vertical-rl;white-space:nowrap;
+  font-size:11px;letter-spacing:.36em;color:rgba(233,227,213,.5);
+}
+
+/* ---------- 签筒 ---------- */
+.altar{position:absolute;right:9vw;bottom:8vh;z-index:14;width:260px;height:380px}
+.tube-wrap{
+  position:absolute;left:30px;bottom:44px;width:200px;text-align:center;
+  transition:transform .35s ease;
+}
+.tube-wrap.shaking{animation:shake .12s linear infinite}
+.tube-wrap::before{content:"";position:absolute;left:50%;top:38%;width:190px;height:190px;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,rgba(220,171,89,.22),transparent 68%);opacity:0;transition:opacity .4s;pointer-events:none}
+.tube-wrap:hover::before,.tube-wrap.shaking::before{opacity:1}
+.tube-wrap.falling{animation:fall .72s cubic-bezier(.2,.8,.3,1)}
+.tube{
+  width:200px;height:280px;margin:auto;touch-action:none;cursor:pointer;outline:none;
+  -webkit-tap-highlight-color:transparent;
+  filter:drop-shadow(0 22px 26px rgba(0,0,0,.55));
+}
+.tube svg{width:100%;height:100%;display:block}
+.tube-shadow{
+  position:absolute;left:50%;bottom:36px;width:220px;height:34px;
+  transform:translateX(-50%);border-radius:50%;
+  background:radial-gradient(ellipse,rgba(0,0,0,.7),transparent 70%);
+  filter:blur(8px);
+}
+.tube-hint{margin:10px 0 0;font-size:11px;letter-spacing:.28em;color:rgba(233,227,213,.45)}
+
+/* ---------- 香炉、油灯 ---------- */
+.incense{position:absolute;left:8vw;bottom:14vh;z-index:14;width:80px;height:150px}
+.censer{
+  position:absolute;left:50%;bottom:0;width:80px;height:34px;transform:translateX(-50%);
+  border-radius:50% 50% 40% 40%;
+  background:linear-gradient(180deg,#4a3a26,#1a130d);
+  box-shadow:0 10px 20px rgba(0,0,0,.5);
+}
+.incense > i.stick{
+  position:absolute;bottom:26px;width:2px;height:86px;
+  background:linear-gradient(180deg,#6b5a3e,#3b2f1f);
+  transform-origin:bottom;
+}
+.incense > i.stick:nth-of-type(1){left:26px;transform:rotate(-4deg)}
+.incense > i.stick:nth-of-type(2){left:38px;transform:rotate(1deg)}
+.incense > i.stick:nth-of-type(3){left:50px;transform:rotate(5deg)}
+.incense > i.stick::before{
+  content:"";position:absolute;left:50%;top:-3px;width:5px;height:5px;
+  margin-left:-2.5px;border-radius:50%;background:#ff9a52;box-shadow:0 0 10px #ff7a2a;
+  opacity:0;transition:.8s;
+}
+body.entered .incense > i.stick::before{opacity:.9;animation:ember 2.2s ease-in-out infinite}
+
+/* 几缕淡烟 */
+.smoke{
+  position:absolute;left:50%;bottom:112px;width:80px;height:190px;
+  transform:translateX(-50%);pointer-events:none;
+}
+.smoke i{
+  position:absolute;left:50%;bottom:0;width:14px;height:84px;margin-left:-7px;
+  border-radius:50%;
+  background:linear-gradient(180deg,rgba(226,231,223,0) 0%,rgba(226,231,223,.42) 35%,rgba(226,231,223,.16) 70%,transparent 100%);
+  filter:blur(7px);mix-blend-mode:screen;opacity:0;
+  transform:translate3d(0,0,0) scale(.6);
+  animation:smokeWisp var(--t,10s) linear infinite;
+  animation-delay:var(--d,0s);
+  animation-play-state:paused;
+}
+body.entered .smoke i{animation-play-state:running}
+
+.lamp{
+  position:absolute;left:20vw;bottom:18vh;z-index:13;width:70px;height:80px;
+}
+.lamp::before{
+  content:"";position:absolute;left:50%;bottom:16px;width:10px;height:18px;
+  transform:translateX(-50%);border-radius:50% 50% 45% 45%;
+  background:radial-gradient(circle at 50% 35%,#ffe9b0,#e08a3a 60%,rgba(224,138,58,0) 100%);
+  box-shadow:0 0 34px 14px rgba(224,150,70,.22);
+  animation:flicker 2.4s ease-in-out infinite;
+}
+.lamp::after{
+  content:"";position:absolute;left:50%;bottom:4px;width:46px;height:16px;
+  transform:translateX(-50%);border-radius:50%;
+  background:linear-gradient(180deg,#3a2618,#120c08);
+  box-shadow:0 6px 12px rgba(0,0,0,.5);
+}
+
+/* ---------- 默念 ---------- */
+.whisper{
+  position:absolute;left:50%;top:24vh;transform:translateX(-50%);z-index:20;
+  margin:0;font-size:13px;letter-spacing:.3em;text-align:center;white-space:nowrap;
+  color:rgba(233,227,213,.55);opacity:0;transition:opacity 1.2s ease;
+}
+.whisper.show{opacity:1}
+
+/* ---------- 掷筊 ---------- */
+.jiao-stage{
+  position:absolute;left:50%;bottom:10vh;transform:translateX(-50%);z-index:24;
+  width:340px;text-align:center;opacity:0;transition:opacity .5s ease;
+  pointer-events:none;
+}
+.jiao-stage[hidden]{display:none!important}
+.jiao-stage.open{opacity:1;pointer-events:auto}
+.jiao-name{margin:0 0 6px;font-size:11px;letter-spacing:.5em;color:var(--gold)}
+.jiao-pair{
+  display:flex;justify-content:center;gap:26px;perspective:300px;
+  margin-bottom:8px;
+}
+.jiao{width:96px;height:62px;filter:drop-shadow(0 10px 12px rgba(0,0,0,.5))}
+.jiao svg{width:100%;height:100%;display:block}
+.jiao .face-flat{display:none}
+.jiao[data-face="flat"] .face-curved{display:none}
+.jiao[data-face="flat"] .face-flat{display:block}
+.jiao-pair.throwing .jiao:nth-child(1){animation:throwA .7s cubic-bezier(.2,.7,.3,1)}
+.jiao-pair.throwing .jiao:nth-child(2){animation:throwB .7s cubic-bezier(.2,.7,.3,1)}
+
+.jiao-btn{
+  display:inline-block;margin:4px auto 0;padding:9px 28px;
+  background:transparent;border:1px solid rgba(233,227,213,.45);
+  color:var(--paper);font-size:13px;letter-spacing:.36em;cursor:pointer;
+  transition:.3s;
+}
+.jiao-btn:hover{background:var(--paper);color:var(--ink)}
+.jiao-hint{margin:8px 0 0;font-size:11px;letter-spacing:.18em;color:rgba(233,227,213,.45)}
+.jiao-result{min-height:20px;margin:6px 0 0;font-size:13px;letter-spacing:.2em;color:#c05a4a}
+
+/* ---------- 签文 ---------- */
+.card-panel{
+  position:fixed;inset:0;z-index:60;display:grid;place-items:center;padding:22px;
+  background:rgba(4,6,7,.86);backdrop-filter:blur(10px);
+  opacity:0;transition:opacity .5s ease;
+}
+.card-panel[hidden]{display:none!important}
+.card-panel.open{opacity:1}
+.card-panel.open .scroll-paper{animation:paperArrive .8s cubic-bezier(.2,.75,.2,1) both}
+.card-panel.open .card-art-wrap{animation:cardRise .9s .12s cubic-bezier(.2,.75,.2,1) both}
+.card-panel.open .card-state,.card-panel.open .poem,.card-panel.open .keywords,.card-panel.open .meaning,.card-panel.open .advice,.card-panel.open .question,.card-panel.open .accept{animation:textReveal .7s .28s both}
+
+.scroll-paper{
+  position:relative;width:min(560px,92vw);max-height:90svh;overflow:auto;
+  padding:36px 44px 30px;color:#15171a;
+  background-color:#e9e3d5;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.28'/%3E%3C/svg%3E");
+  background-blend-mode:multiply;
+  box-shadow:0 50px 120px rgba(0,0,0,.75),0 0 0 1px rgba(15,19,22,.2);
+}
+.scroll-paper::after{
+  content:"";position:absolute;left:0;right:0;top:0;height:2px;
+  background:var(--cinnabar);opacity:.5;
+}
+.close-card{
+  position:absolute;right:16px;top:10px;border:0;background:none;
+  font-size:28px;line-height:1;color:rgba(21,23,26,.55);cursor:pointer;
+}
+.paper-head{
+  margin:0 0 14px;text-align:center;font-size:10px;letter-spacing:.5em;
+  color:rgba(21,23,26,.5);
+}
+
+.card-art-wrap{text-align:center}
+.card-art{
+  position:relative;width:170px;height:226px;margin:0 auto;overflow:hidden;
+  border-radius:50% / 44%;
+  background:radial-gradient(ellipse at 50% 38%,#f1ebdc,#d8cfba 60%,#c3b79d);
+  background-size:cover;background-position:center;
+  border:1px solid rgba(21,23,26,.28);
+  box-shadow:inset 0 0 30px rgba(0,0,0,.15);
+}
+.card-fallback{
+  position:absolute;inset:0;display:grid;place-items:center;
+  font-family:var(--brush);font-size:64px;letter-spacing:0;
+  writing-mode:vertical-rl;color:#15171a;
+}
+.card-art.reversed .card-fallback{transform:rotate(180deg)}
+.card-art.has-image .card-fallback{opacity:0;visibility:hidden}
+.card-label{position:relative;z-index:2;margin-top:20px}
+.card-label strong{font-family:var(--brush);font-size:30px;font-weight:400;letter-spacing:.18em;color:#15171a}
+
+.card-state{margin:6px 0 16px;text-align:center;font-size:12px;letter-spacing:.32em;color:var(--cinnabar)}
+.poem{margin:0 0 12px;text-align:center;font-size:22px;line-height:2;letter-spacing:.12em;white-space:pre-line}
+.keywords{margin:0 0 18px;text-align:center;font-size:11px;letter-spacing:.22em;color:rgba(21,23,26,.55)}
+.meaning{margin:0 0 20px;font-size:15px;line-height:2.1;text-align:justify}
+.advice{border-top:1px solid rgba(21,23,26,.18);border-bottom:1px solid rgba(21,23,26,.18);padding:12px 0;margin-bottom:16px}
+.advice p{display:flex;gap:10px;margin:4px 0;font-size:14px;line-height:1.9}
+.advice b{
+  flex:none;width:22px;height:22px;display:grid;place-items:center;
+  background:var(--cinnabar);color:#f3ecdc;font-weight:400;font-size:12px;
+}
+.question{margin:0 0 22px;padding-left:12px;border-left:2px solid var(--cinnabar);font-size:14px;line-height:2;color:rgba(21,23,26,.75)}
+.accept{
+  display:block;margin:0 auto;padding:10px 32px;background:transparent;
+  border:1px solid #15171a;color:#15171a;font-size:13px;letter-spacing:.34em;
+  cursor:pointer;transition:.3s;
+}
+.accept:hover{background:#15171a;color:#e9e3d5}
+
+/* ---------- 状态与页脚 ---------- */
+.status{
+  position:absolute;left:50%;bottom:5.2vh;transform:translateX(-50%);z-index:22;
+  margin:0;font-size:12px;letter-spacing:.22em;color:rgba(176,138,74,.8);
+  text-align:center;white-space:nowrap;
+}
+footer{
+  position:absolute;left:50%;bottom:1.4vh;transform:translateX(-50%);z-index:22;
+  font-size:8px;letter-spacing:.18em;color:rgba(233,227,213,.22);white-space:nowrap;
+}
+
+/* ---------- 入殿 ---------- */
+.entry{
+  position:fixed;inset:0;z-index:100;display:grid;place-items:center;
+  background:radial-gradient(ellipse at 50% 38%,#152226 0%,#070b0d 55%,#040607 100%);
+  transition:opacity 1s ease,visibility 1s;
+}
+.entry.leaving{opacity:0;visibility:hidden;pointer-events:none}
+.entry[hidden]{display:none!important}
+.entry-inner{text-align:center;padding:20px}
+.entry-temple{margin:0 0 10px;font-size:12px;letter-spacing:.7em;color:var(--gold);opacity:.8}
+.entry h2{
+  margin:0;font-family:var(--brush);font-weight:400;
+  font-size:clamp(56px,8vw,92px);letter-spacing:.2em;color:var(--paper);
+  text-shadow:0 4px 40px rgba(0,0,0,.8);
+}
+.entry-sub{margin:14px 0 0;font-size:11px;letter-spacing:.4em;color:rgba(233,227,213,.5)}
+.entry button{
+  margin-top:38px;padding:12px 40px;background:transparent;
+  border:1px solid rgba(233,227,213,.45);color:var(--paper);
+  font-size:13px;letter-spacing:.42em;cursor:pointer;transition:.35s;
+}
+.entry button:hover{background:var(--paper);color:#0b1114}
+.entry-note{margin:20px 0 0;font-size:10px;letter-spacing:.3em;color:rgba(233,227,213,.3)}
+
+/* ---------- 动效 ---------- */
+@keyframes shake{0%,100%{transform:rotate(0)}25%{transform:rotate(-3deg) translateX(-2px)}75%{transform:rotate(3deg) translateX(2px)}}
+@keyframes fall{0%{transform:translateY(0)}45%{transform:translateY(-16px)}100%{transform:translateY(0)}}
+@keyframes mistA{from{transform:translateX(-6%) scale(1)}to{transform:translateX(16%) scale(1.15)}}
+@keyframes mistB{from{transform:translateX(8%) scale(1.05)}to{transform:translateX(-14%) scale(1.2)}}
+@keyframes dustMove{from{background-position:0 0}to{background-position:97px -113px}}
+@keyframes ember{0%,100%{opacity:.6;box-shadow:0 0 6px #ff7a2a}50%{opacity:1;box-shadow:0 0 14px #ff9a52}}
+@keyframes smokeWisp{
+  0%{opacity:0;transform:translate3d(0,0,0) scale(.6) rotate(0)}
+  15%{opacity:.5;transform:translate3d(calc(var(--x,0px) * .5 + 3px),-34px,0) scale(.85) rotate(4deg)}
+  55%{opacity:.3;transform:translate3d(var(--x,0px),-104px,0) scale(1.2) rotate(8deg)}
+  100%{opacity:0;transform:translate3d(calc(var(--x,0px) * 1.5 - 5px),-172px,0) scale(1.6) rotate(-6deg)}
+}
+@keyframes flicker{0%,100%{opacity:.5}40%{opacity:.34}70%{opacity:.62}}
+@keyframes throwA{0%{transform:translateY(0) rotate(0)}45%{transform:translateY(-46px) rotate(220deg)}100%{transform:translateY(0) rotate(360deg)}}
+@keyframes throwB{0%{transform:translateY(0) rotate(0)}45%{transform:translateY(-38px) rotate(-200deg)}100%{transform:translateY(0) rotate(-360deg)}}
+@keyframes paperArrive{from{opacity:0;transform:translateY(24px) scale(.97) rotate(-1deg)}to{opacity:1;transform:none}}
+@keyframes cardRise{from{opacity:0;transform:translateY(22px) scale(.92)}to{opacity:1;transform:none}}
+@keyframes textReveal{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* ---------- 手机 ---------- */
+@media(max-width:760px){
+  .site-topbar{padding:14px 16px;gap:10px}
+  .site-brand-en,.site-date{display:none}
+  .site-brand-cn{font-size:12px;letter-spacing:.12em;white-space:nowrap}
+  .site-nav{gap:10px;font-size:10px;letter-spacing:.08em;white-space:nowrap}
+  .site-nav a{padding:2px 0}
+  .back-to-main{top:18px;left:auto;right:14px;width:48px;height:36px}
+  .back-to-main .sword{width:21px}
+  .back-to-main .sword-aura{width:40px;height:20px}
+  .back-to-main::before{width:44px;height:12px}
+  .back-to-main .frost:nth-of-type(n+7){display:none}
+  .embed .back-to-main{top:64px;left:auto;right:14px}
+  .embed .card-panel{padding-top:58px}
+  .embed .scroll-paper{max-height:calc(100svh - 80px)}
+  .sig-head{top:5vh;left:6vw}
+  .sig-head h1{font-size:46px}
+  .sig-sub{font-size:10px}
+  .plaque{display:none}
+  .altar{right:50%;transform:translateX(50%);bottom:7vh;width:240px;height:340px;scale:.88;transform-origin:bottom center}
+  .tube-wrap{left:20px;bottom:40px}
+  .incense{left:6vw;bottom:24vh;scale:.8;transform-origin:bottom left}
+  .lamp{left:10vw;bottom:28vh}
+  .table{height:34vh}
+  .jiao-stage{bottom:42vh;width:88vw}
+  .jiao{width:78px;height:52px}
+  .jiao-pair{gap:18px}
+  .status{bottom:3vh;font-size:11px;width:92%;white-space:normal}
+  footer{display:none}
+  .scroll-paper{width:94vw;padding:28px 22px 24px;max-height:92svh}
+  .card-art{width:132px;height:178px}
+  .card-fallback{font-size:36px}
+  .card-label strong{font-size:26px}
+  .poem{font-size:19px}
+  .meaning{font-size:14px}
+  .entry h2{font-size:56px}
+  .whisper{top:30vh;font-size:12px;letter-spacing:.2em}
+}
+
+body.entered .sig-head,
+body.entered .plaque,
+body.entered .altar,
+body.entered .incense,
+body.entered .lamp{
+  animation:reveal 1.6s ease both;
+}
+@keyframes reveal{from{opacity:0}to{opacity:1}}
+
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+}
+
+/* ---------- 新开场视觉：使用用户生成的古寺签牌插画 ---------- */
+.entry{
+  background:
+    linear-gradient(90deg,rgba(4,7,9,.82),rgba(4,7,9,.28) 55%,rgba(4,7,9,.72)),
+    url("../assets/temple-entry-bg.png") center/cover no-repeat,
+    radial-gradient(ellipse at 50% 38%,#152226 0%,#070b0d 55%,#040607 100%);
+}
+.entry::before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse at 50% 46%,transparent 18%,rgba(0,0,0,.32) 72%,rgba(0,0,0,.72));
+}
+.entry-inner{position:relative;z-index:1;padding:clamp(24px,5vw,64px);animation:entryBreath 8s ease-in-out infinite alternate}
+.entry-inner::after{
+  content:"";position:absolute;left:50%;bottom:-28px;width:180px;height:1px;transform:translateX(-50%);
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.7;
+}
+.entry button{box-shadow:0 0 0 1px rgba(176,138,74,.08),0 12px 34px rgba(0,0,0,.28)}
+.entry button:hover{box-shadow:0 0 28px rgba(176,138,74,.18)}
+@keyframes entryBreath{from{transform:translateY(0)}to{transform:translateY(-5px)}}
+@keyframes swordFloat{from{transform:translateY(0) rotate(-1.2deg)}to{transform:translateY(-5px) rotate(1.2deg)}}
+@keyframes auraBreathe{0%,100%{opacity:.5;transform:translate(-50%,-50%) scale(.94)}50%{opacity:.9;transform:translate(-50%,-50%) scale(1.06)}}
+@keyframes frostDrift{0%,100%{opacity:.25;transform:translate(-50%,0)}50%{opacity:.6;transform:translate(-50%,-12px)}}
+@keyframes frostFloat{0%{opacity:0;transform:translate(0,0) scale(.5)}25%{opacity:.9}100%{opacity:0;transform:translate(6px,-28px) scale(1.1)}}
+@keyframes iceFlow{to{stroke-dashoffset:-158}}
+@keyframes swordShrink{
+  0%{transform:scale(1);opacity:1;filter:drop-shadow(0 0 18px rgba(190,240,255,.8))}
+  100%{transform:scale(.05);opacity:0;filter:blur(5px)}
+}
+
+/* 让开场后的三层景别产生非常轻的空间感 */
+body.entered .mountains{transform:translate3d(calc(var(--mx) * -7px),calc(var(--my) * -4px),0);transition:transform 1.4s ease-out}
+body.entered .altar{transform:translate3d(calc(var(--mx) * 6px),calc(var(--my) * 3px),0)}
+body.entered .incense{transform:translate3d(calc(var(--mx) * -10px),calc(var(--my) * -5px),0)}
+.altar,.incense{transition:transform 1.2s cubic-bezier(.2,.7,.2,1)}
+
+/* 摇签时的光和尘埃反馈 */
+body:has(.tube-wrap.shaking) .beam{opacity:.95;filter:blur(7px);transition:opacity .3s,filter .3s}
+body:has(.tube-wrap.shaking) .dust{animation-duration:9s;opacity:.32}
+body:has(.tube-wrap.shaking) .tube-hint{color:var(--gold);text-shadow:0 0 16px rgba(176,138,74,.45)}
+
+/* 签文弹出时，纸张和牌面更像被灯光照亮 */
+.card-panel.open::before{content:"";position:absolute;inset:12%;background:radial-gradient(ellipse,rgba(201,162,39,.1),transparent 65%);filter:blur(20px);pointer-events:none}
+.scroll-paper{transform-origin:50% 20%;border-top:3px solid rgba(163,49,39,.45)}
+.reading-card .status{opacity:0;transition:opacity .25s}
+
+@media(max-width:760px){
+  .entry{background-position:center top}
+  .entry-inner{padding:24px 16px}
+  body.entered .mountains,body.entered .altar,body.entered .incense{transform:none}
+}
+

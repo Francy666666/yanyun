@@ -1,0 +1,468 @@
+/* =========================================================
+   燕云十六声 · 样式表
+   ---------------------------------------------------------
+   这个文件只管「长相」：颜色、字号、间距、动画。
+   改文字 / 换图片 / 增删画面 → 请打开「内容配置.js」
+
+   常用位置：
+   · 换整体色调       → 改下面 :root 里的颜色
+   · 改某一屏         → 搜「夜宴」「聚光」「山行」「换卷」
+   · 改标题大小       → 搜 .hero-title
+   · 改手机排版       → 拉到文件最下面 @media (max-width:760px)
+
+   小提醒：.scene--night 这类带点的英文是「样式代号」，
+   改它们会让页面失去样式；一般只改冒号后面的值。
+   ========================================================= */
+
+/* ---------- 全站颜色与字体（换色调先改这里） ---------- */
+:root{
+  --night-bg:#08070b;                 /* 夜色背景：近黑 */
+  --night-ink:#f0e5cd;                /* 夜色文字：米白 */
+  --night-mute:rgba(232,218,190,.66);
+  --gold:#d9b878;                     /* 金色：标题、线条、印章边 */
+  --gold-soft:rgba(217,184,120,.45);
+  --red:#a3252c;                      /* 朱砂红：印章、进度条 */
+  --red-deep:#6f1820;
+  --paper:#f4eddd;                    /* 宣纸色：题跋卡片 */
+  --ink:#221e1a;                      /* 墨色：浅色页上的字 */
+  --jade:#4f6f5b;                     /* 竹青：备用点缀 */
+  --serif:"Songti SC","STSong","SimSun","Noto Serif SC",serif;      /* 标题宋体 */
+  --sans:"PingFang SC","Microsoft YaHei","Hiragino Sans GB","Noto Sans SC",sans-serif; /* 正文黑体 */
+  --ease:cubic-bezier(.22,.68,.16,1); /* 动画缓动 */
+  --slow:1.2s;
+
+  /* 换卷（第 4 屏）的图片尺寸：
+     想让人脸更大或更小，改这三个值即可。
+     --换卷高 越大，能看到的人物越多；--换卷焦点 控制上下位置。 */
+  --换卷宽:min(1080px,94vw);
+  --换卷高:min(64vh,600px);
+  --换卷焦点:50% 20%;
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  background:var(--night-bg);
+  color:var(--night-ink);
+  font-family:var(--sans);
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+::selection{background:rgba(163,37,44,.75);color:#fff}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+
+/* ---------- 全局装饰 ---------- */
+.cursor-glow{
+  position:fixed;left:0;top:0;width:520px;height:520px;margin:-260px 0 0 -260px;
+  border-radius:50%;pointer-events:none;z-index:3;opacity:0;
+  background:radial-gradient(circle,rgba(255,202,130,.13),rgba(255,180,90,.05) 42%,transparent 68%);
+  mix-blend-mode:screen;transition:opacity .6s ease;
+  will-change:transform;
+}
+@media (hover:hover) and (pointer:fine){
+  .cursor-glow{opacity:1}
+}
+.scroll-progress{
+  position:fixed;left:0;top:0;right:0;height:2px;z-index:60;
+  background:rgba(255,255,255,.05);
+}
+.scroll-progress i{
+  display:block;height:100%;width:0%;
+  background:linear-gradient(90deg,var(--red),var(--gold));
+  box-shadow:0 0 12px rgba(217,184,120,.6);
+}
+
+/* ---------- 顶栏 ---------- */
+.topbar{
+  position:fixed;inset:0 0 auto 0;z-index:50;
+  display:flex;align-items:center;justify-content:space-between;gap:24px;
+  padding:22px clamp(20px,3.6vw,52px);
+  color:var(--night-ink);
+  background:linear-gradient(180deg,rgba(6,5,9,.55),rgba(6,5,9,0));
+  pointer-events:none;
+}
+.topbar a,.topbar .topbar-mark{pointer-events:auto}
+.brand{display:flex;align-items:baseline;gap:12px}
+.brand-cn{
+  font-family:var(--serif);font-size:17px;letter-spacing:.26em;
+  text-shadow:0 1px 18px rgba(0,0,0,.6);
+}
+.brand-en{font-size:8px;letter-spacing:.34em;opacity:.48}
+.nav{display:flex;gap:clamp(16px,2.4vw,34px);font-size:12px;letter-spacing:.24em}
+.nav a{position:relative;padding:4px 0;opacity:.7;transition:opacity .35s ease}
+.nav a::after{
+  content:"";position:absolute;left:0;right:100%;bottom:-2px;height:1px;
+  background:var(--gold);transition:right .45s var(--ease);
+}
+.nav a:hover{opacity:1}
+.nav a:hover::after{right:0}
+.topbar-mark{font-size:10px;letter-spacing:.28em;opacity:.42}
+.topbar{transition:color .55s var(--ease),background .55s var(--ease)}
+.topbar.is-light{
+  color:#211d17;
+  background:linear-gradient(180deg,rgba(250,247,240,.82),rgba(250,247,240,.55) 46%,rgba(250,247,240,.16) 82%,rgba(250,247,240,0));
+}
+.topbar.is-light .brand-cn{text-shadow:0 1px 0 rgba(255,255,255,.4)}
+.topbar.is-light .nav a{opacity:.84}
+.topbar.is-light .nav a::after{background:#8a6a2e}
+
+/* ---------- 场景通用 ---------- */
+.scene{position:relative;min-height:100svh;overflow:hidden;isolation:isolate}
+.veil{position:absolute;inset:0;pointer-events:none}
+.vignette{
+  background:
+    radial-gradient(120% 90% at 50% 42%,transparent 34%,rgba(4,3,7,.55) 78%,rgba(3,2,5,.88) 100%),
+    linear-gradient(180deg,rgba(4,3,7,.55),transparent 26%,transparent 72%,rgba(3,2,5,.7));
+}
+.vignette-soft{
+  background:
+    radial-gradient(120% 90% at 50% 40%,transparent 45%,rgba(20,28,20,.28) 100%),
+    linear-gradient(180deg,rgba(10,14,10,.22),transparent 30%,transparent 70%,rgba(12,16,12,.38));
+}
+.grain{
+  opacity:.075;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:180px 180px;
+  animation:grainShift 1.2s steps(3) infinite;
+}
+@keyframes grainShift{
+  0%{transform:translate3d(0,0,0)}
+  33%{transform:translate3d(-2%,1%,0)}
+  66%{transform:translate3d(1%,-2%,0)}
+  100%{transform:translate3d(0,0,0)}
+}
+.scene-tag{
+  position:absolute;z-index:8;right:clamp(20px,3.6vw,52px);top:88px;
+  font-size:10px;letter-spacing:.26em;color:rgba(235,220,192,.62);
+  text-align:right;text-shadow:0 1px 12px rgba(0,0,0,.7);
+}
+.scene-tag b{color:var(--gold);font-weight:400;margin-right:10px}
+.scene-tag--dark{color:rgba(38,40,34,.62)}
+.scene-tag--dark b{color:#8a6a2e}
+.dot{opacity:.45;margin:0 .55em}
+.eyebrow{font-size:10px;letter-spacing:.3em;color:var(--gold);margin:0 0 18px}
+.hint{font-size:11px;letter-spacing:.2em;opacity:.6;margin-top:18px}
+
+/* 图片路径写错时，页面底部会出现这条红色提示（正常看不到） */
+.img-error{
+  position:absolute;left:0;right:0;bottom:0;z-index:40;
+  padding:12px 18px;background:rgba(163,37,44,.94);color:#fff3e2;
+  font-size:12px;line-height:1.7;letter-spacing:.04em;text-align:center;
+}
+
+/* ---------- 01 夜宴 ---------- */
+.scene--night{display:grid;place-items:center;background:#050409}
+.night-media{
+  position:absolute;inset:-3.5%;z-index:0;
+  transform:translate3d(0,0,0) scale(1.06);
+  will-change:transform;
+}
+.night-img{
+  width:100%;height:100%;object-fit:cover;object-position:50% 20%;
+  animation:heroSettle 2.6s var(--ease) both;
+  transition:opacity .9s ease;
+}
+
+/* 水面波纹画布：盖在照片上，鼠标/手指划过会起涟漪 */
+.night-canvas{
+  position:absolute;inset:0;width:100%;height:100%;
+  opacity:0;transition:opacity .9s ease;pointer-events:none;
+}
+.night-media.has-ripple .night-img{opacity:0}
+.night-media.has-ripple .night-canvas{opacity:1}
+@keyframes heroSettle{
+  from{transform:scale(1.12);filter:brightness(.7) saturate(.9)}
+  to{transform:scale(1);filter:brightness(1) saturate(1)}
+}
+.night-warmth{
+  position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:
+    radial-gradient(46% 40% at 70% 30%,rgba(255,178,92,.26),transparent 70%),
+    radial-gradient(30% 26% at 24% 22%,rgba(255,196,120,.14),transparent 72%),
+    radial-gradient(40% 46% at 50% 100%,rgba(150,26,38,.18),transparent 70%);
+  mix-blend-mode:screen;
+  animation:warmth 8s ease-in-out infinite alternate;
+}
+@keyframes warmth{
+  from{opacity:.72;transform:scale(1)}
+  to{opacity:1;transform:scale(1.04)}
+}
+.fx{position:absolute;inset:0;z-index:2;width:100%;height:100%;pointer-events:none}
+.night-sheen{
+  position:absolute;inset:-20% -55%;z-index:1;pointer-events:none;
+  background:linear-gradient(102deg,transparent 36%,rgba(255,214,160,.11) 47%,rgba(255,226,184,.035) 56%,transparent 68%);
+  mix-blend-mode:screen;
+  animation:sheen 17s ease-in-out infinite;
+}
+@keyframes sheen{
+  0%,100%{transform:translateX(-10%)}
+  50%{transform:translateX(10%)}
+}
+
+.hero-copy{
+  position:absolute;z-index:7;left:clamp(24px,6.4vw,104px);top:50%;
+  transform:translateY(-50%);
+  display:flex;flex-direction:column;align-items:flex-start;
+}
+/* 竖排大标题：字号看下面 clamp(46px, 6.6vw, 96px)，三个数依次是「最小 / 随屏幕 / 最大」 */
+.hero-title{
+  writing-mode:vertical-rl;text-orientation:upright;
+  margin:0;font-family:var(--serif);font-weight:400;
+  font-size:clamp(46px,6.6vw,96px);line-height:1.08;letter-spacing:.14em;
+  color:#f3e7ce;
+  text-shadow:0 2px 6px rgba(0,0,0,.45),0 18px 60px rgba(0,0,0,.8);
+}
+.hero-title span{
+  display:inline-block;opacity:0;
+  transform:translateY(-18px);filter:blur(8px);
+  animation:smokeIn 1.5s var(--ease) forwards;
+  animation-delay:calc(.55s + var(--i) * .17s);
+}
+@keyframes smokeIn{
+  0%{opacity:0;transform:translateY(-18px);filter:blur(9px)}
+  60%{opacity:1;filter:blur(1px)}
+  100%{opacity:1;transform:translateY(0);filter:blur(0)}
+}
+.hero-seal{
+  width:46px;height:46px;margin:16px 0 0 4px;
+  display:grid;place-items:center;background:var(--red);
+  color:#f6e9cf;font-family:var(--serif);font-size:24px;letter-spacing:0;
+  transform:rotate(-3deg);opacity:0;animation:sealDrop .8s var(--ease) 1.55s forwards;
+  box-shadow:0 10px 30px rgba(163,37,44,.32),inset 0 0 0 1px rgba(255,235,200,.18);
+}
+@keyframes sealDrop{
+  from{opacity:0;transform:translateY(-14px) rotate(-8deg) scale(1.3)}
+  to{opacity:.94;transform:translateY(0) rotate(-3deg) scale(1)}
+}
+.hero-sub{
+  margin:26px 0 0;font-size:11px;letter-spacing:.42em;color:rgba(232,214,182,.75);
+  text-shadow:0 1px 12px rgba(0,0,0,.85),0 0 2px rgba(0,0,0,.5);
+  opacity:0;animation:fadeUp 1.4s var(--ease) 1.5s forwards;
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+.scroll-hint{
+  position:absolute;z-index:8;left:50%;bottom:26px;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+  font-size:9px;letter-spacing:.34em;color:rgba(232,214,182,.45);
+}
+.scroll-line{
+  width:1px;height:54px;background:linear-gradient(180deg,transparent,var(--gold));
+  background-size:100% 200%;animation:lineMove 2.4s ease-in-out infinite;
+}
+@keyframes lineMove{
+  0%{background-position:0 -100%}
+  100%{background-position:0 200%}
+}
+
+/* ---------- 02 聚光显影 ---------- */
+.scene--focus{background:#141311}
+.focus-stage{position:absolute;inset:0;z-index:0;--fx:50%;--fy:42%;overflow:hidden}
+.focus-img{
+  width:100%;height:100%;object-fit:cover;object-position:50% 38%;
+  transform:scale(1.03);
+}
+.focus-img--color{filter:saturate(1.05) contrast(1.02)}
+/* 光圈：280px 是照亮半径，想更亮更大就改这个数；手机版在下面 160px */
+.focus-gray{
+  position:absolute;inset:0;
+  -webkit-mask-image:radial-gradient(circle 280px at var(--fx) var(--fy),transparent 0%,rgba(0,0,0,.18) 34%,#000 74%);
+  mask-image:radial-gradient(circle 280px at var(--fx) var(--fy),transparent 0%,rgba(0,0,0,.18) 34%,#000 74%);
+}
+.focus-gray .focus-img{filter:grayscale(1) brightness(.74) contrast(1.08) saturate(.4)}
+.focus-edge{
+  position:absolute;inset:auto 0 0 0;height:60%;z-index:2;pointer-events:none;
+  background:linear-gradient(180deg,transparent,rgba(10,12,9,.72));
+}
+.focus-ring{
+  position:absolute;z-index:3;left:var(--fx);top:var(--fy);width:76px;height:76px;
+  margin:-38px 0 0 -38px;border-radius:50%;
+  border:1px solid rgba(240,214,158,.72);
+  box-shadow:0 0 34px rgba(240,214,158,.3),inset 0 0 30px rgba(240,214,158,.12);
+  opacity:0;transition:opacity .5s ease;
+  pointer-events:none;
+}
+.focus-stage:hover .focus-ring{opacity:1}
+.focus-copy{
+  position:absolute;z-index:4;left:clamp(24px,6.4vw,104px);bottom:12vh;
+  max-width:520px;color:#f6efe2;text-shadow:0 2px 24px rgba(10,14,10,.55);
+}
+.focus-copy h2{
+  font-family:var(--serif);font-weight:400;
+  font-size:clamp(30px,4.2vw,56px);line-height:1.32;letter-spacing:.1em;margin:0;
+}
+.focus-copy .eyebrow{color:#e6c98d}
+.extra-copy{margin-top:22px;max-width:52ch;color:rgba(246,239,226,.78);font-size:12px;line-height:1.9;letter-spacing:.08em}
+.extra-copy h3{margin:0 0 6px;color:#e6c98d;font-family:var(--serif);font-size:17px;font-weight:400;letter-spacing:.14em}
+.extra-copy p{margin:0 0 8px}
+.extra-copy a{color:#e6c98d;text-decoration:none;border-bottom:1px solid rgba(230,201,141,.5)}
+
+/* ---------- 03 山行 ---------- */
+.scene--day{background:#cfd8c8}
+.day-media{position:absolute;inset:0;z-index:0;overflow:hidden}
+.day-img{
+  width:100%;height:100%;object-fit:cover;object-position:50% 36%;
+  animation:kenburns 30s ease-in-out infinite alternate;
+  filter:saturate(.96) brightness(1.03);
+  transform-origin:52% 40%;
+}
+@keyframes kenburns{
+  0%{transform:scale(1.015) translate3d(0,0,0)}
+  50%{transform:scale(1.06) translate3d(-1%,-1.2%,0)}
+  100%{transform:scale(1.085) translate3d(1%,.6%,0)}
+}
+.rays{position:absolute;inset:-20% -10%;z-index:1;pointer-events:none;mix-blend-mode:screen}
+.rays i{
+  position:absolute;top:-10%;width:24vw;height:130%;
+  background:linear-gradient(180deg,rgba(255,247,214,.42),rgba(255,247,214,.06) 55%,transparent 80%);
+  transform:rotate(18deg);filter:blur(28px);opacity:.55;
+  animation:rayDrift 14s ease-in-out infinite alternate;
+}
+.rays i:nth-child(1){left:12%;animation-delay:-3s}
+.rays i:nth-child(2){left:42%;width:16vw;opacity:.4;animation-delay:-7s}
+.rays i:nth-child(3){left:68%;width:20vw;opacity:.5;animation-delay:-1s}
+@keyframes rayDrift{
+  from{transform:rotate(18deg) translateX(-3%) scaleY(.96);opacity:.32}
+  to{transform:rotate(21deg) translateX(4%) scaleY(1.04);opacity:.62}
+}
+.scene--day .fx{z-index:2}
+
+/* 宣纸题跋：宽度看 min(640px, 86vw)，想更窄就改 640px */
+.poem-card{
+  position:absolute;z-index:5;left:50%;bottom:clamp(40px,8vh,90px);transform:translateX(-50%) translateY(18px);
+  margin:0;padding:26px clamp(26px,4vw,56px) 22px;
+  width:min(640px,86vw);text-align:center;
+  background:rgba(246,240,228,.9);
+  border:1px solid rgba(255,255,255,.55);
+  box-shadow:0 30px 80px rgba(30,40,30,.28),inset 0 0 0 1px rgba(120,110,90,.08);
+  backdrop-filter:blur(6px) saturate(1.1);
+  -webkit-backdrop-filter:blur(6px) saturate(1.1);
+  opacity:0;transition:opacity 1.2s var(--ease),transform 1.2s var(--ease);
+}
+.poem-card.in{opacity:1;transform:translateX(-50%) translateY(0)}
+.poem-card blockquote{
+  margin:0;font-family:var(--serif);color:#2b2620;
+  font-size:clamp(22px,3vw,34px);letter-spacing:.24em;line-height:1.5;
+}
+.scene--day>.extra-copy{position:absolute;z-index:6;left:50%;bottom:3vh;transform:translateX(-50%);text-align:center;color:rgba(40,35,28,.72)}
+.scene--day>.extra-copy h3{color:#725d3e}
+.poem-card figcaption{
+  margin-top:12px;font-size:10px;letter-spacing:.32em;color:#726652;
+}
+.seal{
+  position:absolute;right:16px;bottom:-16px;width:42px;height:42px;
+  display:grid;place-items:center;background:var(--red);color:#f7ecd4;
+  font-family:var(--serif);font-size:22px;transform:rotate(3deg);
+  box-shadow:0 8px 22px rgba(120,30,30,.3);
+}
+
+/* ---------- 04 换卷 ---------- */
+.scene--compare{
+  background:radial-gradient(90% 70% at 50% 0%,#17141b,#0a090d 60%);
+  padding:96px clamp(20px,4vw,60px) 60px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;
+}
+.compare-head{text-align:center;max-width:720px;opacity:0;transform:translateY(18px);
+  transition:opacity 1.1s var(--ease),transform 1.1s var(--ease)}
+.compare-head.in{opacity:1;transform:none}
+.compare-head h2{
+  font-family:var(--serif);font-weight:400;margin:0;
+  font-size:clamp(28px,3.6vw,46px);letter-spacing:.16em;color:#f0e5cd;
+}
+/* 换卷画面：高度看 --换卷高，宽度看 --换卷宽（都不用在下面改） */
+.compare-stage{
+  position:relative;z-index:2;width:var(--换卷宽);height:var(--换卷高);
+  overflow:hidden;border:1px solid rgba(217,184,120,.22);
+  box-shadow:0 40px 100px rgba(0,0,0,.55);
+  cursor:ew-resize;touch-action:pan-y;user-select:none;
+  opacity:0;transform:translateY(24px);
+  transition:opacity 1.2s var(--ease),transform 1.2s var(--ease);
+}
+.compare-stage.in{opacity:1;transform:none}
+.cmp-img{width:100%;height:100%;object-fit:cover;object-position:var(--换卷焦点);pointer-events:none}
+.cmp-img--night{filter:brightness(.98)}
+
+/* 左右两格：各自装一张完整人像，金线拖动改变两边的宽度 */
+.cmp-pane{position:absolute;top:0;bottom:0;overflow:hidden;will-change:width}
+.cmp-pane--left{left:0;width:var(--split)}
+.cmp-pane--right{right:0;width:calc(100% - var(--split))}
+.cmp-pane--right::after{
+  content:"";position:absolute;inset:0 auto 0 0;width:70px;pointer-events:none;
+  background:linear-gradient(90deg,rgba(0,0,0,.42),rgba(0,0,0,0));
+}
+.cmp-handle{
+  position:absolute;top:0;bottom:0;left:var(--split);width:1px;z-index:4;
+  background:linear-gradient(180deg,transparent,var(--gold) 12%,var(--gold) 88%,transparent);
+  box-shadow:0 0 18px rgba(217,184,120,.55);
+}
+.cmp-knob{
+  position:absolute;left:50%;top:50%;width:52px;height:52px;margin:-26px 0 0 -26px;
+  border-radius:50%;border:1px solid rgba(240,220,180,.75);
+  background:rgba(12,10,14,.35);backdrop-filter:blur(4px);
+  display:grid;place-items:center;
+  box-shadow:0 0 30px rgba(217,184,120,.28);
+}
+.cmp-knob::before{
+  content:"‹ ›";font-size:14px;letter-spacing:.18em;color:#f0dfbc;
+  transform:translateY(-1px);
+}
+.cmp-label{
+  position:absolute;z-index:3;top:16px;font-family:var(--serif);
+  font-size:13px;letter-spacing:.3em;color:rgba(255,248,232,.92);
+  padding:5px 12px 5px 14px;border:1px solid rgba(255,245,225,.28);
+  background:rgba(12,11,16,.32);backdrop-filter:blur(6px);
+  text-shadow:0 2px 12px rgba(0,0,0,.7);
+}
+.cmp-label--l{left:20px}
+.cmp-label--r{right:20px}
+.compare-note{
+  max-width:58ch;margin:0;text-align:center;
+  font-size:11px;line-height:2;letter-spacing:.12em;color:rgba(226,214,192,.42);
+}
+.scene--compare>.extra-copy{text-align:center;margin-top:2px}
+
+/* ---------- 页脚 ---------- */
+.foot{
+  background:#08070b;border-top:1px solid rgba(217,184,120,.14);
+  padding:46px clamp(20px,4vw,60px);display:grid;gap:10px;
+}
+.foot-brand{font-family:var(--serif);letter-spacing:.2em;font-size:13px;color:rgba(240,229,205,.8)}
+.foot-brand span{opacity:.4;margin:0 .5em}
+.foot-note{font-size:10px;letter-spacing:.14em;color:rgba(226,214,192,.35)}
+.foot-meta{font-size:9px;letter-spacing:.3em;color:rgba(226,214,192,.22)}
+
+/* ---------- 响应式 ---------- */
+/* ---------- 手机排版（屏幕宽度小于 760px 时生效） ---------- */
+@media (max-width:760px){
+  .topbar{padding:16px 18px}
+  .brand-en{display:none}
+  .nav{display:none}
+  .topbar-mark{font-size:9px}
+  .scene-tag{display:none}
+  .hero-copy{left:22px;top:15vh;bottom:auto;transform:none}
+  .hero-title{font-size:44px;letter-spacing:.1em}
+  .hero-seal{width:36px;height:36px;font-size:19px;margin-top:12px}
+  .hero-sub{display:none}
+  .scroll-hint{display:none}
+  .focus-copy{left:22px;right:22px;bottom:10vh}
+  .focus-copy h2{font-size:28px}
+  .focus-gray{-webkit-mask-image:radial-gradient(circle 160px at var(--fx) var(--fy),transparent 0%,rgba(0,0,0,.9) 80%);mask-image:radial-gradient(circle 160px at var(--fx) var(--fy),transparent 0%,rgba(0,0,0,.9) 80%)}
+  .focus-ring{display:none}
+  .poem-card{padding:20px 24px 16px;bottom:8vh}
+  .poem-card blockquote{font-size:20px;letter-spacing:.16em}
+  .seal{width:34px;height:34px;font-size:18px;right:10px;bottom:-12px}
+  .scene--compare{padding:90px 16px 70px;gap:22px}
+  .compare-stage{height:54vh;width:100%}
+  .compare-note{font-size:10px}
+  .cursor-glow{display:none}
+}
+
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+  .hero-title span,.hero-seal,.hero-sub{opacity:1;transform:none;filter:none}
+  .poem-card,.compare-head,.compare-stage{opacity:1;transform:none}
+  .fx{display:none}
+}

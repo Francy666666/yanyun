@@ -1,0 +1,98 @@
+/* =========================================================
+   主站外壳：固定顶层导航 + 栏目 iframe
+   ========================================================= */
+:root{
+  --serif:"Songti SC","STSong","SimSun","Noto Serif SC",serif;
+  --gold:#b08a4a;
+  --cream:#f0e5cd;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;overflow:hidden;background:#070b0d}
+body{
+  color:var(--cream);font-family:var(--serif);
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ---------- 顶层导航 ---------- */
+.站点顶栏{
+  position:fixed;inset:0 0 auto 0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;gap:24px;
+  padding:22px clamp(20px,3.6vw,52px);
+  background:linear-gradient(180deg,rgba(6,5,9,.72),rgba(6,5,9,.28) 55%,rgba(6,5,9,0));
+  pointer-events:none;
+}
+.站点顶栏 a,.站点日期{pointer-events:auto}
+.站点品牌{display:flex;align-items:baseline;gap:12px;text-decoration:none;color:inherit}
+.站点品牌-cn{
+  font-size:17px;letter-spacing:.26em;
+  text-shadow:0 1px 18px rgba(0,0,0,.65);
+}
+.站点品牌-en{font-size:8px;letter-spacing:.34em;opacity:.5}
+.站点导航{display:flex;gap:clamp(18px,3vw,40px);font-size:13px;letter-spacing:.24em}
+.站点导航 a{
+  position:relative;padding:4px 0;color:inherit;text-decoration:none;
+  opacity:.55;transition:opacity .35s ease;
+}
+.站点导航 a::after{
+  content:"";position:absolute;left:0;right:100%;bottom:-3px;height:1px;
+  background:var(--gold);transition:right .45s cubic-bezier(.2,.7,.2,1);
+}
+.站点导航 a:hover{opacity:1}
+.站点导航 a:hover::after{right:0}
+.站点导航 a.active{opacity:1}
+.站点导航 a.active::after{right:0}
+.站点日期{font-size:10px;letter-spacing:.28em;opacity:.44;white-space:nowrap}
+
+/* ---------- 栏目容器 ---------- */
+.站点视图{position:fixed;inset:0;z-index:0}
+.站点视图 iframe{
+  position:absolute;inset:0;width:100%;height:100%;
+  border:0;background:#070b0d;display:none;
+}
+.站点视图 iframe.active{display:block}
+.装X-沉浸 .站点顶栏{opacity:0!important;visibility:hidden!important;pointer-events:none!important}
+
+/* 装X时刻会把自己的天色传给外壳顶栏 */
+.装X-日 .站点顶栏{
+  background:linear-gradient(180deg,rgba(250,246,236,.97) 0%,rgba(250,246,236,.9) 62%,rgba(250,246,236,0) 100%);
+  color:#1b1a17;
+  backdrop-filter:blur(6px);
+  text-shadow:0 1px 0 rgba(255,255,255,.55);
+}
+.装X-日 .站点品牌-cn{text-shadow:0 1px 0 rgba(255,255,255,.55)}
+.装X-日 .站点导航 a::after{background:#9a2b26}
+.装X-日 .站点日期{color:#5a4a35}
+.装X-日 .站点顶栏::after,
+.装X-暮 .站点顶栏::after,
+.装X-夜 .站点顶栏::after{
+  content:"";position:absolute;left:0;right:0;top:100%;height:26px;pointer-events:none;
+}
+.装X-日 .站点顶栏::after{background:linear-gradient(180deg,rgba(250,246,236,.78),rgba(250,246,236,0))}
+.装X-暮 .站点顶栏::after{background:linear-gradient(180deg,rgba(20,5,5,.7),rgba(20,5,5,0))}
+.装X-夜 .站点顶栏::after{background:linear-gradient(180deg,rgba(0,0,0,.7),rgba(0,0,0,0))}
+.装X-暮 .站点顶栏{
+  background:linear-gradient(180deg,rgba(20,5,5,.94) 0%,rgba(20,5,5,.8) 62%,rgba(20,5,5,0) 100%);
+  color:#e6d3b3;
+  backdrop-filter:blur(5px);
+  text-shadow:0 1px 8px rgba(0,0,0,.7);
+}
+.装X-暮 .站点导航 a::after{background:#c98a4a}
+.装X-夜 .站点顶栏{
+  background:linear-gradient(180deg,rgba(0,0,0,.94) 0%,rgba(0,0,0,.82) 62%,rgba(0,0,0,0) 100%);
+  color:#d8e2e6;
+  backdrop-filter:blur(5px);
+  text-shadow:0 1px 8px rgba(0,0,0,.7);
+}
+.装X-夜 .站点导航 a::after{background:#8f2424}
+
+@media(max-width:760px){
+  .站点顶栏{padding:14px 16px;gap:10px}
+  .站点品牌-en,.站点日期{display:none}
+  .站点品牌-cn{font-size:12px;letter-spacing:.12em;white-space:nowrap}
+  .站点导航{gap:16px;font-size:11px;letter-spacing:.1em;white-space:nowrap}
+}
+@media(max-width:380px){
+  .站点品牌{display:none}
+  .站点导航{width:100%;justify-content:space-between}
+}
