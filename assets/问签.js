@@ -394,6 +394,7 @@ const 红钱 = document.getElementById('红钱');
 const 秘密文 = document.getElementById('秘密文');
 const 秘密收 = document.getElementById('秘密收');
 let 灯拾过 = false;
+let 灯计时 = null;
 let 钱音频 = null;
 
 function 钱响() {
@@ -483,7 +484,19 @@ function secretReady() {
   return document.body.classList.contains('entered');
 }
 
-石灯?.addEventListener('click', 开秘密);
+function 点灯等三秒() {
+  if (!secretReady()) return;
+  if (!秘密.hidden) return;
+  if (灯计时) return;
+  石灯.classList.add('亮');
+  try { navigator.vibrate?.(12); } catch (_) {}
+  灯计时 = setTimeout(() => {
+    灯计时 = null;
+    开秘密();
+  }, 3000);
+}
+
+石灯?.addEventListener('click', 点灯等三秒);
 秘密关?.addEventListener('click', 关秘密);
 秘密罩?.addEventListener('click', 关秘密);
 秘密收?.addEventListener('click', 关秘密);
