@@ -495,7 +495,7 @@ function secretReady() {
   钱盘.classList.add('收');
   秘密文.hidden = false;
   秘密收.hidden = false;
-  秘密引.textContent = '灯下见金，心上见人。';
+  秘密引.textContent = '灯座底下，传来一声——';
   钱响();
   钱响();
   try { navigator.vibrate?.([14, 26, 40]); } catch (_) {}
