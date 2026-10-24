@@ -45,3 +45,7 @@ _scratch/
 粒子人像.js
 古风长廊_备份*.html
 
+
+# ---- 测试页附属资源（未被主站引用） ----
+assets/css/粒子人像.css
+assets/data/couple-points.js
