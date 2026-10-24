@@ -1,0 +1,22 @@
+*{box-sizing:border-box}
+html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#08080d}
+body{font-family:"Songti SC","STSong","SimSun",serif;color:#f5e6d8;letter-spacing:0}
+button{font:inherit}
+.portrait{position:relative;width:100%;height:100%;height:100dvh;min-height:420px;overflow:hidden;background:#08080d;isolation:isolate}
+.portrait::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 40% 62% at 50% 48%,#33202a 0%,#100c13 68%,#08080d 100%)}
+.source{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;pointer-events:none}
+.portrait.is-fallback .source{opacity:1}
+.canvas-host{position:absolute;inset:0;z-index:1}
+.canvas-host canvas{display:block;width:100%;height:100%}
+.edge{position:absolute;z-index:2;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(8,8,13,.75),transparent 23%,transparent 70%,rgba(8,8,13,.82)),linear-gradient(90deg,rgba(8,8,13,.38),transparent 27%,transparent 73%,rgba(8,8,13,.38))}
+.heading{position:absolute;z-index:3;top:clamp(25px,5vh,60px);left:clamp(24px,5vw,82px);text-shadow:0 2px 18px #000}
+.heading__eyebrow{display:block;color:#d4a8a2;font:10px Georgia,serif;letter-spacing:.18em}
+h1{margin:13px 0 0;font-size:clamp(30px,3vw,48px);font-weight:400;letter-spacing:.12em;line-height:1.2}
+.controls{position:absolute;z-index:3;right:clamp(24px,5vw,82px);bottom:clamp(28px,5vh,60px);display:flex;align-items:center;gap:17px}
+.replay{width:56px;height:56px;display:grid;place-items:center;border:1px solid #d8a8a2;border-radius:50%;background:rgba(49,18,30,.65);color:#f8e6cd;font-size:26px;cursor:pointer;box-shadow:0 0 30px rgba(209,76,93,.17);transition:background .2s,transform .2s}
+.replay:hover{transform:scale(1.08);background:rgba(108,34,52,.82)}
+.replay:focus-visible{outline:2px solid #fff;outline-offset:4px}
+.controls__label{color:#e8c8bb;font-size:12px;letter-spacing:.16em;text-shadow:0 2px 12px #000;white-space:nowrap}
+.error{position:absolute;z-index:4;left:50%;bottom:10px;transform:translateX(-50%);width:max-content;max-width:90%;margin:0;color:#fff;font-size:12px;text-align:center;text-shadow:0 2px 10px #000}
+@media(max-width:760px){.heading{top:24px;left:22px}.heading__eyebrow{font-size:8px;letter-spacing:.12em}h1{font-size:30px}.controls{right:22px;bottom:26px;gap:11px}.replay{width:48px;height:48px;font-size:21px}.controls__label{font-size:11px}}
+@media(prefers-reduced-motion:reduce){.replay{transition:none}}

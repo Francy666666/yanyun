@@ -1,88 +1,47 @@
 # 给洗衣粉的惊喜
 
-燕云十六声主题的静态生日站点。`index.html` 是主站入口；Cloudflare 部署前会运行 `build.js`，只把站点文件复制到 `public/`。
+静态网站，主入口为 index.html，motion.html 是同一套主站外壳。所有原有 HTML 名称和打开地址保留。
 
-## 本地预览
+## 页面归类
 
-在项目根目录运行：
-
-```bash
-node build.js
-python -m http.server 8000 --directory public
-```
-
-打开：
-
-```text
-http://127.0.0.1:8000/
-```
-
-不要直接双击 HTML 来测试托管行为；本地 HTTP 更接近 Cloudflare Pages。
-
-## GitHub
-
-仓库：
-
-```text
-https://github.com/Francy666666/yanyun
-```
-
-主分支：`main`
-
-## Cloudflare Pages 部署
-
-1. 登录 Cloudflare Dashboard。
-2. 进入 **Workers & Pages → Create application → Pages → Connect to Git**。
-3. 授权 GitHub，选择 `Francy666666/yanyun`。
-4. 项目名可以填 `yanyun` 或 `birthday-surprise`。
-5. 生产分支选 `main`。
-6. 构建设置：
-
-| 设置 | 值 |
+| 分类 | 入口 |
 | --- | --- |
-| Framework preset | None |
-| Build command | `node build.js` |
-| Build output directory | `public` |
-| Root directory | 留空 |
+| 主站 | index.html / motion.html，栏目配置在 内容配置.js |
+| 主站栏目 | 合照.html、问签.html、装X.html、第四页.html（许愿天使） |
+| 回忆旅程 | 古风长廊.html → 新世界.html |
+| 独立实验 | 碧波.html、红绡入梦.html、回忆长廊.html、粒子人像.html、人像粒子.html、烟花测试.html |
 
-`build.js` 只复制页面、`assets/`、`图片/` 和两条装X视频到 `public/`，不会把 `node_modules/`、`preview/`、原始视频或旧图带进部署包。
+## 文件分工
 
-7. 点击 **Save and Deploy**。
-8. 部署完成后会得到一个 `https://项目名.pages.dev` 地址。
+| 目录 | 内容 |
+| --- | --- |
+| assets/css/ | 页面样式 |
+| assets/js/pages/ | 各页面脚本；new-world、corridor、birthday 对应三个主要场景 |
+| assets/js/shared/ | 转场、字幕、音乐、渲染质量、可见状态 |
+| assets/data/ | 长廊、合照粒子、问签数据 |
+| assets/images/ | 运行用蛋糕、蜡烛、石板等素材 |
+| assets/vendor/three/ | Three.js 本地库及许可证 |
+| 图片/、视频/、音乐/、新动画合集/ | 按媒体种类保留的原有素材 |
+| scripts/checks/ | 本次使用的检查脚本 |
+| archive/backups/ | 修改前备份与旧版本 |
+| archive/originals/ | 未被网页引用的原图 |
+| archive/screenshots/ | 历次检查截图 |
+| archive/tools/ | 历史辅助脚本 |
+| archive/reference/ | 原 preview 参考资料 |
+| archive/asset-moves.json | 本次运行资源路径迁移表 |
+| public/ | 可重新生成的本地构建输出 |
+| node_modules/ | 开发依赖 |
 
-> 注意：如果你在 Cloudflare 里看到的是 **Worker**（日志里出现 `npx wrangler deploy`、`Worker Name`），那不是 Pages，最终网址会是 `*.workers.dev`。请重新在 **Pages → Connect to Git** 创建项目；或者把当前 Worker 的构建命令改成 `node build.js`，部署命令保留 `npx wrangler deploy`。
+HTML 入口留在根目录以保留旧链接；具体代码按用途分类。archive 不参与构建。完整修改前场景在 archive/backups/before-organization/，仅供恢复代码，不作为当前网页入口。
 
-以后每次 `git push` 到 `main`，Cloudflare Pages 会自动重新部署。
+## 修改与本地预览
 
-## 自定义域名
+修改栏目、文案和合照素材：内容配置.js。修改场景效果：查看 使用说明.md。
 
-Cloudflare Pages 项目 → **Custom domains** → 添加域名。
+运行 npm run check 检查引用和语法；运行 npm run build 生成 public；然后运行 python -m http.server 8000 --directory public 并访问 http://127.0.0.1:8000/ 。保存后 Ctrl+F5 强制刷新。
 
-- 域名已经在 Cloudflare：按提示自动加 DNS；
-- 域名不在 Cloudflare：按提示加 CNAME，指向 `项目名.pages.dev`；
-- HTTPS 由 Cloudflare 自动签发。
+构建包含全部根目录 HTML、运行素材和音乐，不依赖文件是否已被 Git 跟踪；备份、工具、原始大视频和开发依赖不进入输出。本地构建不会上传或部署。仓库仍为 Francy666666/yanyun，wrangler.jsonc 仍指向 public。
 
-## 注意事项
+## 新世界性能
 
-- Cloudflare Pages 单个文件上限是 **25 MiB**。当前仓库里最大的运行文件是 `视频/装X-正片.mp4`，约 15.9 MB，没问题。
-- `视频/3a16d41fdaf6aca3a55a6241bcbd128d_raw.mp4` 约 30.8 MB，已经通过 `.gitignore` 排除，不会上传。
-- 不要给运行用的视频启用 Git LFS；Cloudflare Pages 不会自动拉取 LFS 文件。
-- `preview/`、`node_modules/`、`.chrome-*` 都不会部署。
-- 中文文件名和带空格的文件名已经通过本地 HTTP 验证；Cloudflare 会按 URL 编码正常访问。
-- `index.html` 目前是 `motion.html` 的副本，root 可直接打开主站。以后如果改主站外壳，记得同步这两个文件；也可以改成重定向到 `motion.html`。
-
-## 目录
-
-```text
-index.html              主站入口（与 motion.html 相同）
-motion.html             主站外壳
-合照.html               和师父的合照
-问签.html               古寺问签
-装X.html                装X时刻
-内容配置.js             栏目与场景配置
-build.js                生成 public/ 部署目录
-wrangler.jsonc          Worker 模式下的静态资源目录（public）
-assets/                 样式、脚本、Three.js 打包文件
-图片/                   场景图、牌面、卡片
-视频/                   装X两条视频
-```
+流光缓存的六个方向分帧更新，每帧最多计算一个方向，同一轮固定时间与配色。桌面最多 18 组涟漪，触屏最多 12 组，保留水面反射和鼠标环视。隐藏长廊和新世界暂停绘制，音乐状态独立保留。实际流畅度仍受显卡、窗口尺寸和浏览器影响。

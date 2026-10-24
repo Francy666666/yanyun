@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1a1712">
+<title>古风长廊 · 测试</title>
+<link rel="stylesheet" href="assets/css/corridor.css">
+</head>
+<body>
+<div id="name"></div>
+<div id="hud">加载中…</div>
+<div id="tip">轻点 → 走到下一幅</div>
+
+<script>
+  addEventListener('error', function (e) {
+    var h = document.getElementById('hud');
+    if (h) h.hidden = false;
+    if (h) h.textContent = 'ERR · ' + ((e && e.message) || '?');
+  });
+</script>
+<script src="assets/vendor/three/three.global.js"></script>
+<script src="assets/data/corridor-data.js"></script>
+<script src="assets/js/shared/water-journey.js"></script>
+<script src="assets/js/shared/journey-captions.js"></script>
+<script src="assets/js/shared/scene-lifecycle.js"></script><script src="assets/js/shared/scene-quality.js"></script>
+<script src="assets/js/pages/corridor-storm.js"></script>
+<script src="assets/js/pages/corridor.js"></script>
+<script src="assets/js/shared/journey-music.js"></script>
+</body>
+</html>

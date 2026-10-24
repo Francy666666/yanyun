@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#100b13">
+  <title>红绡入梦</title>
+  <link rel="stylesheet" href="assets/css/红绡入梦.css">
+</head>
+<body>
+  <main class="stage" id="stage" aria-label="红绡入梦角色场景">
+    <div class="fallback" aria-hidden="true"></div>
+    <div class="scene" id="scene" aria-hidden="true"></div>
+    <div class="veil" aria-hidden="true"></div>
+    <div class="frame frame--top" aria-hidden="true"></div>
+    <div class="frame frame--bottom" aria-hidden="true"></div>
+
+    <div class="identity">
+      <div class="identity__mark" aria-hidden="true">绡</div>
+      <div class="identity__copy">
+        <span class="identity__overline">YAN YUN · CHARACTER SCENE</span>
+        <h1>红绡入梦</h1>
+        <p>一眼惊鸿，万千灯火皆失色。</p>
+      </div>
+    </div>
+
+    <div class="side-note" aria-hidden="true">金钗映月 · 红衣照夜</div>
+    <div class="reveal" id="reveal" aria-live="polite">此间风月，不及你回眸。</div>
+
+    <div class="actions">
+      <button class="play" id="play" type="button" aria-label="播放出场演出">
+        <span class="play__glyph" aria-hidden="true">✦</span>
+        <span id="playLabel">启幕</span>
+      </button>
+      <span class="hint" id="hint">轻触画面 · 光影随行</span>
+    </div>
+    <p class="fallback-note" id="fallbackNote" hidden>当前设备无法显示动态效果，仍可欣赏角色画面。</p>
+  </main>
+  <script type="module" src="assets/js/pages/红绡入梦.js"></script>
+</body>
+</html>

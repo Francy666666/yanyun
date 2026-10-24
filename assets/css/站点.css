@@ -96,3 +96,10 @@ body{
   .站点品牌{display:none}
   .站点导航{width:100%;justify-content:space-between}
 }
+
+/* Keep narrow-screen navigation on its own row, above scene controls. */
+@media(max-width:900px){
+ .站点顶栏{flex-wrap:wrap;row-gap:12px}
+ .站点导航{order:3;flex:0 0 100%;min-width:0;justify-content:space-between;gap:8px;font-size:clamp(10px,1.8vw,12px);letter-spacing:.04em}
+ .站点日期{margin-left:auto}
+}

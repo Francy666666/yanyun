@@ -24,3 +24,24 @@ b744f0b698b3ddcf7f097b7aa1882038.jpg
 图片/退出-铃铛.jpg
 图片/签筒.jpg
 图片/石灯.jpg
+
+# Local archives and visual checks
+archive/
+
+# ---- 不参与上传：本地草稿 / 归档 / 构建产物 ----
+archive/
+public/
+_scratch/
+生日祝福/
+新动画合集/
+视频/3a16d41fdaf6aca3a55a6241bcbd128d_raw.mp4
+
+# ---- 草稿与测试页 ----
+烟花测试.html
+回忆长廊.html
+碧波.html
+人像粒子.html
+粒子人像.html
+粒子人像.js
+古风长廊_备份*.html
+

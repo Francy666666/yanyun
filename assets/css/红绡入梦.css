@@ -1,0 +1,46 @@
+:root{color-scheme:dark;font-family:"Songti SC","STSong","SimSun",serif;letter-spacing:0}
+*{box-sizing:border-box}
+html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#100b13}
+button{font:inherit}
+.stage{position:relative;width:100%;height:100%;height:100dvh;min-height:450px;overflow:hidden;color:#f7e8d0;isolation:isolate}
+.fallback,.scene,.veil{position:absolute;inset:0}
+.fallback{background:#15101b url("../../图片/红绡角色.jpg") center 39% / cover no-repeat;transform:scale(1.035)}
+.scene{z-index:1;opacity:0;transition:opacity 1.2s ease}
+.stage.is-ready .scene{opacity:1}
+.scene canvas{display:block;width:100%;height:100%}
+.veil{z-index:2;pointer-events:none;background:linear-gradient(90deg,rgba(9,6,12,.67),transparent 35%,transparent 72%,rgba(11,6,14,.27)),linear-gradient(0deg,rgba(10,6,11,.82),transparent 34%,transparent 70%,rgba(9,5,11,.32))}
+.frame{position:absolute;z-index:3;left:clamp(18px,3.5vw,58px);right:clamp(18px,3.5vw,58px);height:1px;background:linear-gradient(90deg,transparent,rgba(214,177,109,.72) 10%,rgba(214,177,109,.18) 70%,transparent);pointer-events:none}
+.frame--top{top:clamp(86px,9vw,124px)}
+.frame--bottom{bottom:clamp(22px,3vw,42px)}
+.identity{position:absolute;z-index:4;left:clamp(30px,6vw,96px);bottom:clamp(88px,12vh,158px);display:flex;align-items:flex-end;gap:20px;max-width:65%;text-shadow:0 2px 20px #000}
+.identity__mark{width:40px;height:40px;display:grid;place-items:center;border:1px solid #b77b69;background:#852b30;color:#fff2dd;font-size:22px;line-height:1;flex:none}
+.identity__copy{min-width:0}
+.identity__overline{display:block;color:#e3c397;font-family:Georgia,serif;font-size:10px;letter-spacing:.26em;white-space:nowrap}
+h1{margin:11px 0 6px;font-size:clamp(34px,4vw,65px);font-weight:400;line-height:1.18;letter-spacing:.12em;white-space:nowrap}
+.identity p{margin:0;color:#e9d9c4;font-size:clamp(13px,1.18vw,18px);letter-spacing:.14em;white-space:nowrap}
+.side-note{position:absolute;z-index:4;right:clamp(26px,5vw,78px);top:25%;writing-mode:vertical-rl;letter-spacing:.48em;font-size:12px;color:#ecd3ae;text-shadow:0 2px 16px #000;opacity:.83}
+.actions{position:absolute;z-index:5;right:clamp(30px,6vw,96px);bottom:clamp(92px,12vh,158px);display:flex;flex-direction:column;align-items:center;gap:12px}
+.play{width:74px;height:74px;border:1px solid rgba(244,209,153,.77);border-radius:50%;color:#fbe8ce;background:rgba(54,19,31,.44);box-shadow:0 0 0 8px rgba(230,186,118,.08),0 0 32px rgba(172,43,53,.22);backdrop-filter:blur(7px);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:13px;letter-spacing:.12em;transition:transform .25s,background .25s,box-shadow .25s}
+.play:hover,.play:focus-visible{transform:scale(1.07);background:rgba(115,32,46,.67);box-shadow:0 0 0 10px rgba(230,186,118,.1),0 0 42px rgba(226,77,77,.45)}
+.play:focus-visible{outline:2px solid #fff0ce;outline-offset:6px}
+.play__glyph{font-size:19px;line-height:1;color:#f7d696}
+.hint{font-size:10px;letter-spacing:.2em;color:#e4d0b7;white-space:nowrap;text-shadow:0 2px 8px #000}
+.reveal{position:absolute;z-index:4;left:50%;top:45%;transform:translate(-50%,12px);width:max-content;max-width:90%;padding:18px 36px;color:#fff2d5;font-size:clamp(19px,2.4vw,32px);letter-spacing:.2em;text-align:center;opacity:0;pointer-events:none;text-shadow:0 2px 12px #18050d,0 0 30px #cf694e;transition:opacity .8s,transform .8s}
+.stage.is-revealed .reveal{opacity:1;transform:translate(-50%,0)}
+.fallback-note{position:absolute;z-index:6;left:50%;bottom:46px;transform:translateX(-50%);margin:0;color:#f7e8d0;font-size:12px;text-shadow:0 1px 6px #000;white-space:nowrap}
+@media(max-width:760px){
+  .veil{background:linear-gradient(0deg,rgba(8,4,10,.86),transparent 32%,transparent 77%,rgba(7,4,10,.28)),linear-gradient(90deg,rgba(8,4,10,.22),transparent 28%,transparent 72%,rgba(8,4,10,.25))}
+  .frame--top{top:92px}.frame--bottom{bottom:22px}
+  .identity{left:24px;right:24px;bottom:120px;max-width:none;gap:12px;align-items:center}
+  .identity__mark{width:34px;height:34px;font-size:19px}
+  .identity__overline{font-size:8px;letter-spacing:.13em}
+  h1{font-size:34px;margin:7px 0 3px;letter-spacing:.08em}
+  .identity p{font-size:12px;letter-spacing:.06em}
+  .side-note{right:24px;top:19%;font-size:10px}
+  .actions{left:24px;right:24px;bottom:35px;flex-direction:row;justify-content:space-between}
+  .play{width:62px;height:62px;font-size:11px;flex:none}
+  .hint{font-size:10px;letter-spacing:.09em}
+  .reveal{top:52%;width:90%;padding:0;font-size:19px;line-height:1.8;letter-spacing:.12em}
+}
+@media(max-width:380px){.identity{bottom:116px}.identity__mark{display:none}.identity p{font-size:11px}.hint{font-size:9px}}
+@media(prefers-reduced-motion:reduce){.scene,.play,.reveal{transition:none!important}}

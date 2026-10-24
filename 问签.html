@@ -6,7 +6,7 @@
   <title>问签 · 先觉菩萨寺</title>
   <meta name="description" content="深山古寺，一签一念。">
   <script>if(new URLSearchParams(location.search).has('embed'))document.documentElement.classList.add('embed');</script>
-  <link rel="stylesheet" href="assets/问签.css">
+  <link rel="stylesheet" href="assets/css/问签.css">
 </head>
 <body>
   <main class="temple" id="问签页面">
@@ -85,7 +85,10 @@
       <div class="tube-wrap" id="签筒区域">
         <div class="tube-shadow" aria-hidden="true"></div>
         <div class="tube" id="签筒" role="button" tabindex="0" aria-label="按住摇签，松手落签">
-          <img class="tube-img" src="图片/签筒.png" alt="" draggable="false">
+          <picture class="tube-picture">
+            <source media="(max-width:760px)" srcset="图片/签筒-手机.png">
+            <img class="tube-img" src="图片/签筒.png" alt="" draggable="false">
+          </picture>
         </div>
         <p class="tube-hint" id="提示">按住摇签，松手落签</p>
       </div>
@@ -183,7 +186,7 @@
     </section>
   </main>
 
-  <script src="assets/问签数据.js"></script>
-  <script src="assets/问签.js"></script>
+  <script src="assets/data/问签数据.js"></script>
+  <script src="assets/js/pages/问签.js"></script>
 </body>
 </html>

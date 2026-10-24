@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#06070b">
+  <title>许愿天使</title>
+  <link rel="stylesheet" href="assets/css/birthday.css">
+  <style>
+    .snd[hidden]{display:none}
+    .snd{border:0;background:none;color:rgba(242,212,168,.6);cursor:pointer;
+      font:inherit;font-size:12px;letter-spacing:.18em;padding:12px 2px;
+      display:inline-flex;align-items:center;transition:color .25s}
+    .snd:hover,.snd:focus-visible{color:#ffe2b0}
+    .snd::before{content:"";width:5px;height:5px;border-radius:50%;margin-right:9px;
+      background:#f0c987;box-shadow:0 0 8px rgba(240,201,135,.8)}
+    .snd[aria-pressed="false"]::before{background:#6b6560;box-shadow:none}  </style>
+</head>
+<body>
+  <main class="stage" id="stage" aria-label="生日快乐光影演出">
+    <canvas id="sky" aria-hidden="true"></canvas>
+    <canvas id="fxgl" aria-hidden="true"></canvas>
+    <pre id="fxdbg" style="display:none;position:fixed;left:8px;top:8px;z-index:99;margin:0;padding:8px 10px;background:rgba(0,0,0,.65);color:#9fe;font:10px/1.5 ui-monospace,monospace;white-space:pre-wrap;max-width:70vw;pointer-events:none"></pre>
+    <div class="grain" aria-hidden="true"></div>
+    <div class="topline"><span>LET THE WORLD LIGHT UP</span><span class="topline__right">A MOMENT JUST FOR YOU</span></div>
+    <div class="star" id="star" aria-hidden="true"></div>
+    <div class="intro" id="intro"><div class="intro__inner"><span class="intro__line" aria-hidden="true"></span><button class="start" id="start" type="button">开启惊喜</button><p class="intro__sub">轻点，让世界亮起来</p></div></div>
+    <div class="title" id="title" role="img" aria-label="生日快乐">
+      <img class="title__img" id="titleImg" src="assets/images/happy-birthday.png" alt="生日快乐" decoding="async">
+      <i class="title__sheen" id="titleSheen" aria-hidden="true"></i>
+    </div>
+    <div class="wish" id="wish" aria-live="polite">
+      <p id="wishLine"></p>
+      <p class="wish__hint" id="wishHint"></p>
+    </div>
+    <p class="status" id="status">LET THE WORLD LIGHT UP</p>
+    <div class="controls"><button class="control" id="skip" type="button" hidden>跳过 ›</button><button class="snd" id="snd" type="button" aria-pressed="true" hidden>♪ 播放中</button><button class="control" id="replay" type="button" hidden>↻ 再看一次</button></div>
+    <div class="bottomline" aria-hidden="true"></div>
+    <audio id="bgm" src="assets/环境声.aac" preload="auto"></audio>
+    <button class="cake" id="cake" type="button" aria-label="离开，回到主页">
+      <img class="cake__img" src="assets/images/cake.png" alt="" aria-hidden="true">
+    </button>
+  </main>
+  <script src="assets/js/pages/birthday.js"></script>
+<script>
+(() => {
+  const bgm = document.getElementById('bgm');
+  const snd = document.getElementById('snd');
+  const title = document.getElementById('title');
+  if (!bgm || !snd || !title) return;
+  bgm.volume = .5;
+  let playing = false, started = false;
+
+  const ui = () => {
+    snd.textContent = playing ? '♪ 播放中' : '♪ 已暂停';
+    snd.setAttribute('aria-pressed', String(playing));
+  };
+  const play = () => {
+    if (playing) return;
+    if (bgm.ended || bgm.currentTime > 0) bgm.currentTime = 0;
+    const p = bgm.play();
+    if (p && p.then) p.then(() => { playing = true; started = true; ui(); }).catch(() => {});
+    else { playing = true; started = true; ui(); }
+  };
+  const toggle = () => {
+    if (playing) { bgm.pause(); playing = false; }
+    else play();
+    ui();
+  };
+  snd.addEventListener('click', e => { e.stopPropagation(); toggle(); });
+
+  // 生日快乐出现时自动开始
+  const mo = new MutationObserver(() => {
+    const on = title.classList.contains('is-visible');
+    snd.hidden = !on;
+    if (on) play();
+    else if (playing) { bgm.pause(); bgm.currentTime = 0; playing = false; ui(); }
+  });
+  mo.observe(title, { attributes: true, attributeFilter: ['class'] });
+
+  // 若被浏览器拦截，等下一次点击再试
+  document.addEventListener('pointerdown', () => {
+    if (!started && title.classList.contains('is-visible')) play();
+  }, true);
+
+  ui();
+})();
+</script>
+<script>
+(() => {
+  if(parent===window)return;
+  addEventListener('message',e=>{
+    if(e.source!==parent||e.data?.type!=='journey-host-layout')return;
+    const top=Number(e.data.top);if(!Number.isFinite(top))return;
+    document.documentElement.style.setProperty('--birthday-heading-top',Math.max(18,Math.min(250,top))+'px');
+  });
+  parent.postMessage({type:'journey-layout-request'},'*');
+})();
+</script>
+</body>
+</html>

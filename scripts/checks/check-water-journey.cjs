@@ -1,0 +1,40 @@
+const {chromium}=require('C:/Users/27616/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+const {pathToFileURL}=require('url');const path=require('path');
+(async()=>{
+ const browser=await chromium.launch({headless:true,executablePath:'C:/Program Files/Google/Chrome/Application/chrome.exe',args:['--allow-file-access-from-files']});
+ const mobile=process.argv.includes('--mobile')||process.argv.includes('--touch'),reduced=process.argv.includes('--mobile');const page=await browser.newPage(mobile?{viewport:{width:390,height:844},isMobile:true,hasTouch:true,reducedMotion:reduced?'reduce':'no-preference'}:{viewport:{width:1280,height:800}});page.setDefaultTimeout(120000);
+ const errors=[];page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text().slice(0,900));});
+ const base=pathToFileURL(path.resolve('古风长廊.html')).href;
+ await page.goto(base+'?return=water',{waitUntil:'load',timeout:120000});
+ await page.waitForFunction(()=>document.body.dataset.stop==='6'&&!!document.querySelector('iframe'));
+ const frame=page.frameLocator('iframe');await frame.locator('body.ready').waitFor();
+ await frame.locator('body').evaluate(()=>{
+  window.turnSamples=[];
+  const collect=()=>{const t=Number(document.body.dataset.journeyTime);if(t)window.turnSamples.push({t,p:Number(document.body.dataset.journeyPitch)});requestAnimationFrame(collect);};collect();
+ });
+ await page.locator('canvas').click({position:{x:190,y:400}});
+ await page.waitForFunction(()=>document.querySelector('iframe').style.opacity==='1');
+ await frame.locator('body.journey-active').waitFor();
+ await page.waitForTimeout(1600);await page.screenshot({path:(mobile?'archive/screenshots/mobile-journey-':'archive/screenshots/journey-')+'underwater.png'});
+ await frame.locator('body:not(.journey-active)').waitFor();
+ const samples=await frame.locator('body').evaluate(()=>window.turnSamples);
+ if(samples.length<3)throw Error('Not enough rendered transition frames');
+ const angle=Math.min(...samples.map(s=>s.p));
+ if(!reduced&&angle>-3)throw Error('Visible camera half-turn did not run');
+ if(reduced&&angle<-.6)throw Error('Reduced-motion mode should avoid the flip');
+ // First pointer movement after entry must establish an anchor, not jump to the old absolute mapping.
+ await frame.locator('canvas').dispatchEvent('pointermove',{clientX:350,clientY:130,pointerType:'mouse'});
+ await page.screenshot({path:(mobile?'archive/screenshots/mobile-journey-':'archive/screenshots/journey-')+'arrived.png'});
+ if(await frame.locator('#exit-world span').innerText()!=='back')throw Error('Exit label must be back');
+ await frame.locator('#exit-world').click();
+ await page.waitForFunction(()=>document.querySelector('iframe').style.opacity==='0'&&document.body.dataset.stop==='1');
+ await page.screenshot({path:(mobile?'archive/screenshots/mobile-journey-':'archive/screenshots/journey-')+'return.png'});
+ await page.goto(base+'?return=water',{waitUntil:'load',timeout:120000});
+ await page.frameLocator('iframe').locator('body.ready').waitFor();
+ await page.locator('canvas').click({position:{x:190,y:400}});
+ await page.locator('.journey-skip').click();
+ await page.waitForFunction(()=>document.querySelector('iframe').style.opacity==='1');
+ await frame.locator('body:not(.journey-active)').waitFor();
+ console.log(JSON.stringify({mobile,reduced,renderedTurnFrames:samples.length,minPitch:angle,roundTrip:true,reentryAndSkip:true,errors}));
+ await browser.close();if(errors.length)throw new Error(errors.join('; '));
+})().catch(e=>{console.error(e);process.exitCode=1;});

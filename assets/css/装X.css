@@ -20,7 +20,7 @@ button{font-family:inherit;color:inherit}
   --柱:#8f2424;
   --线:rgba(138,106,46,.45);
   --光:#fff3d6;
-  --场景图:url("../图片/开场2.jpg");
+  --场景图:url("../../图片/开场2.jpg");
   color:var(--墨);
   background:radial-gradient(ellipse at 50% 6%,#fffaf0 0%,var(--纸) 40%,var(--纸2) 100%);
   transition:background 1s ease,color .8s ease;
@@ -28,12 +28,12 @@ button{font-family:inherit;color:inherit}
 .主题暮{
   --纸:#3a120e;--纸2:#0b0505;--墨:#e6d3b3;--朱:#c98a4a;--金:#e0a24a;--柱:#4a0f12;
   --线:rgba(201,138,74,.5);--光:#e0a24a;
-  --场景图:url("../图片/亮相.jpg");
+  --场景图:url("../../图片/亮相.jpg");
 }
 .主题夜{
   --纸:#0a1218;--纸2:#04070a;--墨:#d8e2e6;--朱:#8f2424;--金:#9fb4bf;--柱:#2a0a0c;
   --线:rgba(159,180,191,.4);--光:#9fc6d8;
-  --场景图:url("../图片/正片.jpg");
+  --场景图:url("../../图片/正片.jpg");
 }
 .装X::before{
   content:"";position:absolute;inset:0;z-index:2;pointer-events:none;
@@ -270,13 +270,13 @@ button{font-family:inherit;color:inherit}
 .甲牌{
   background-image:
     linear-gradient(180deg,rgba(250,246,236,.2),rgba(250,246,236,.46)),
-    url("../图片/牌面 亮相.jpg");
+    url("../../图片/牌面 亮相.jpg");
 }
 .乙牌{
   transform:perspective(900px) rotateY(8deg);
   background-image:
     linear-gradient(180deg,rgba(250,246,236,.2),rgba(250,246,236,.46)),
-    url("../图片/牌面 正片.jpg");
+    url("../../图片/牌面 正片.jpg");
 }
 .戏牌 span{
   display:block;width:max-content;writing-mode:vertical-rl;text-orientation:upright;
